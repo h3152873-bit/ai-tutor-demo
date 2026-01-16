@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 智能助教系统</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); /* 深蓝科技风 */
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 90%;
+        }
+        h1 { margin-bottom: 10px; font-size: 24px; }
+        p { color: #94a3b8; margin-bottom: 30px; }
+        .loading { font-size: 14px; color: #64748b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 课程智能助教</h1>
+        <p>全天候为您解答课程疑问<br>点击右下角图标开始</p>
+        <div class="loading">系统已连接，随时待命...</div>
+    </div>
+
+    <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.19/libs/cn/index.js"></script>
+    <script>
+        new CozeWebSDK.WebChatClient({
+            config: {
+                /* ========================================================== */
+                /* ⚠️ 这里填你的 Bot ID */
+                /* ========================================================== */
+                bot_id: '7594087273495855119', 
+            },
+            componentProps: {
+                title: '智能助教',
+            },
+            auth: {
+                type: 'token',
+                /* ⚠️ 这里填你复制的那一长串 Token */
+                token: 'pat_XXXXXXXXXXXXXXXXXXXXXXXXXXXX', 
+                onRefreshToken: function () {
+                    return 'pat_XXXXXXXXXXXXXXXXXXXXXXXXXXXX' 
+                }
+            }
+        });
+    </script>
+</body>
+</html>
