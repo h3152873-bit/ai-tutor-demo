@@ -5,46 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI 智能助教系统</title>
     <style>
+        /* 页面美化样式 */
         body {
             margin: 0;
             padding: 0;
-            font-family: 'PingFang SC', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); /* 深蓝科技风 */
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); /* 深蓝科技风背景 */
             height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             color: white;
+            overflow: hidden;
         }
         .container {
             text-align: center;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05); /* 磨砂玻璃效果 */
+            border-radius: 20px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             max-width: 90%;
+            width: 400px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
-        h1 { margin-bottom: 10px; font-size: 24px; }
-        p { color: #94a3b8; margin-bottom: 30px; }
-        .loading { font-size: 14px; color: #64748b; }
+        h1 { margin: 0 0 15px 0; font-size: 28px; letter-spacing: 1px; }
+        p { color: #94a3b8; margin-bottom: 30px; line-height: 1.6; }
+        .btn-hint {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid #3b82f6;
+            color: #60a5fa;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
     </style>
 </head>
 <body>
+
     <div class="container">
         <h1>🎓 课程智能助教</h1>
-        <p>全天候为您解答课程疑问<br>点击右下角图标开始</p>
-        <div class="loading">系统已连接，随时待命...</div>
+        <p>您的专属 AI 导师已就绪<br>支持 24 小时课程答疑与辅导</p>
+        <div class="btn-hint">👇 点击右下角蓝色图标开始提问</div>
     </div>
 
     <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.19/libs/cn/index.js"></script>
     <script>
         new CozeWebSDK.WebChatClient({
             config: {
-                /* ========================================================== */
-                /* ⚠️ 这里填你的 Bot ID */
-                /* ========================================================== */
+                /* 你的 Bot ID，我已经帮你填好了 */
                 bot_id: '7594087273495855119', 
             },
             componentProps: {
@@ -52,13 +69,20 @@
             },
             auth: {
                 type: 'token',
-                /* ⚠️ 这里填你复制的那一长串 Token */
-                token: 'pat_XXXXXXXXXXXXXXXXXXXXXXXXXXXX', 
+                
+                /* ================================================================= */
+                /* 🔴 🔴 🔴 重要：请把下面的 '在此处粘贴...' 换成你的真实 Token 🔴 🔴 🔴 */
+                /* 注意：一定要保留单引号 ''，只替换里面的中文字 */
+                /* ================================================================= */
+                token: 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan', 
+                
                 onRefreshToken: function () {
-                    return 'pat_XXXXXXXXXXXXXXXXXXXXXXXXXXXX' 
+                    /* 这里也要填一样的 */
+                    return 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
                 }
             }
         });
     </script>
 </body>
 </html>
+
