@@ -7,19 +7,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ================= 保持你喜欢的 SaaS 高级感 UI ================= */
         :root { --primary: #2563EB; --text-dark: #1e293b; --text-gray: #64748b; }
         body { margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; color: var(--text-dark); overflow-x: hidden; height: 100vh; position: relative; }
 
-        /* 1. 高级流体背景 */
+        /* 背景流光 */
         .ambient-light { position: absolute; top: -20%; left: -20%; width: 140%; height: 100vh; background: radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.08), transparent 60%), radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.08), transparent 40%); z-index: -1; animation: float 10s infinite ease-in-out; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
-        /* 2. 顶部导航 */
+        /* 导航栏 */
         .navbar { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); position: fixed; top: 0; width: 100%; z-index: 100; box-sizing: border-box; }
         .brand { font-weight: 800; font-size: 18px; display: flex; align-items: center; gap: 8px; }
         .tag { font-size: 10px; background: #eff6ff; color: var(--primary); padding: 4px 8px; border-radius: 20px; font-weight: 600; }
 
-        /* 3. 核心展示区 */
+        /* 主体内容 */
         .hero { padding: 140px 24px 20px 24px; text-align: left; position: relative; z-index: 10; }
         .animate-up { animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; transform: translateY(20px); }
         .delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.2s; } .delay-3 { animation-delay: 0.3s; }
@@ -27,13 +28,11 @@
         h1 { font-size: 40px; line-height: 1.1; font-weight: 800; margin-bottom: 20px; letter-spacing: -1px; background: linear-gradient(to right, #1e293b, #475569); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .subtitle { font-size: 16px; color: var(--text-gray); line-height: 1.6; margin-bottom: 40px; max-width: 90%; }
 
-        /* 4. 核心启动按钮 */
+        /* 按钮样式 */
         .cta-btn { background: #000; color: white; border: none; padding: 18px 32px; border-radius: 100px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3); transition: all 0.2s; display: inline-flex; align-items: center; gap: 10px; width: 100%; justify-content: center; user-select: none; }
         .cta-btn:active { transform: scale(0.98); background: #333; }
-        /* 加载状态样式 */
-        .cta-btn.loading { background: var(--primary); pointer-events: none; opacity: 0.9; }
 
-        /* 5. 功能矩阵 */
+        /* 功能矩阵 */
         .features-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 40px; padding: 0 24px 40px 24px; position: relative; z-index: 10; }
         .feature-card { background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(0,0,0,0.05); padding: 20px; border-radius: 16px; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 15px; }
         .f-icon { width: 40px; height: 40px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); font-size: 18px; }
@@ -57,7 +56,7 @@
         <p class="subtitle animate-up delay-1">搭载 DeepSeek 双引擎内核，为您提供全天候的课程设计支持。</p>
         
         <div class="animate-up delay-2">
-            <button class="cta-btn" id="startBtn" onclick="smartOpenAI()">
+            <button class="cta-btn" onclick="simpleClick()">
                 <span>开始对话</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
@@ -67,73 +66,50 @@
     <div class="features-grid animate-up delay-3">
         <div class="feature-card">
             <div class="f-icon"><i class="fa-solid fa-brain"></i></div>
-            <div class="f-text"><h3>深度思维模型</h3><p>基于《设计你喜爱的课程》核心方法论</p></div>
+            <div class="f-text"><h3>深度思维模型</h3><p>核心方法论支持</p></div>
         </div>
         <div class="feature-card">
             <div class="f-icon"><i class="fa-solid fa-bolt"></i></div>
-            <div class="f-text"><h3>实时响应</h3><p>毫秒级延迟，像真人一样流畅交流</p></div>
+            <div class="f-text"><h3>实时响应</h3><p>毫秒级极速反馈</p></div>
         </div>
     </div>
 
     <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.19/libs/cn/index.js"></script>
     <script>
-      // 1. 初始化 SDK
       new CozeWebSDK.WebChatClient({
-        config: { bot_id: '7594087273495855119' },
-        componentProps: { title: 'CourseMaster AI' },
+        config: {
+          bot_id: '7594087273495855119', 
+        },
+        componentProps: {
+          title: 'CourseMaster AI',
+        },
         auth: {
           type: 'token',
+          /* 必须用这个最新的 Token，否则鉴权失败打不开 */
           token: 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan', 
-          onRefreshToken: async () => 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
+          onRefreshToken: function () {
+            return 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
+          }
         },
+        /* 保持原样配置，使用 mobile 布局确保有图标 */
         ui: {
             base: {
                 layout: 'mobile',
                 icon: 'https://cdn-icons-png.flaticon.com/512/8943/8943377.png',
                 zIndex: 2000
             },
-            asstBtn: { isNeed: true }, // 保留右下角图标作为备用
-            footer: { isShow: false }
+            asstBtn: { isNeed: true }
         }
       });
 
-      // 2. 智能雷达启动逻辑 (彻底解决点不动的问题)
-      function smartOpenAI() {
-          const btn = document.getElementById('startBtn');
-          
-          // 改变按钮状态，告诉用户“我在努力连接了”
-          const originalContent = btn.innerHTML;
-          btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 正在连接...';
-          btn.classList.add('loading');
-
-          // 设置一个计时器，每 100 毫秒检查一次 SDK 按钮出来没
-          let attempts = 0;
-          const maxAttempts = 50; // 最多尝试 5 秒
-
-          const checkTimer = setInterval(() => {
-              const cozeBtn = document.getElementsByClassName('coze-web-chat-btn')[0];
-              
-              if (cozeBtn) {
-                  // 找到了！立刻点击
-                  cozeBtn.click();
-                  clearInterval(checkTimer);
-                  
-                  // 1秒后把按钮变回来
-                  setTimeout(() => {
-                      btn.innerHTML = originalContent;
-                      btn.classList.remove('loading');
-                  }, 1000);
-              } else {
-                  attempts++;
-                  // 如果找了 50 次还没找到 (网太慢)
-                  if (attempts >= maxAttempts) {
-                      clearInterval(checkTimer);
-                      btn.innerHTML = '请点击右下角蓝色图标';
-                      btn.classList.remove('loading');
-                      // 不再弹讨厌的 Alert，而是直接改按钮文字提示
-                  }
-              }
-          }, 100); 
+      // 最简单粗暴的点击逻辑，不搞花里胡哨的检测
+      function simpleClick() {
+          const btns = document.getElementsByClassName('coze-web-chat-btn');
+          if(btns.length > 0) {
+              btns[0].click();
+          } else {
+              alert('页面加载中，请稍后再试，或直接点击右下角图标。');
+          }
       }
     </script>
 </body>
