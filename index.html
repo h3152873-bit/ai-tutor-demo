@@ -220,17 +220,32 @@
         const client = new CozeWebSDK.WebChatClient({
             config: {
                 /* ========================================================== */
-                /* 🔴 请把你的 bot_id 填在这里 (保留单引号) */
+                /*7594087273495855119*/
                 /* ========================================================== */
                 bot_id: '7594087273495855119', 
             },
             componentProps: {
-                title: '课程专家助手',
+                /* 这里是关键：把界面伪装成定制软件 */
+                title: '课程专家助手 (科研版)',  // 顶部标题
+                width: 800,  // 宽度调大，像电脑软件，而不是手机气泡
+                layout: 'pc', // 强制使用 PC 模式，会居中显示，而不是贴边
+                icon: 'https://img.icons8.com/color/48/artificial-intelligence.png', // 定制一个 AI 图标（可选）
+            },
+            ui: {
+                /* 尝试微调一些基础样式 */
+                base: {
+                    zIndex: 1000,
+                },
+                chatBot: {
+                    title: "《设计你喜爱的课程》智能教研",
+                    uploadable: true, // 允许老师上传文件让 AI 分析
+                    width: 800, 
+                }
             },
             auth: {
                 type: 'token',
                 /* ========================================================== */
-                /* 🔴 请把你的 pat_ 开头的那串乱码填在这里 (保留单引号) */
+                /*pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan*/
                 /* ========================================================== */
                 token: 'pat_XXXXXXXXXXXXXXXXXXXXXXXXXXXX', 
                 onRefreshToken: function () {
@@ -241,14 +256,13 @@
 
         // 核心逻辑：点击按钮唤起 Coze
         function openAI() {
-            // 找到被我们隐藏的Coze按钮并点击它
+            // 找到 Coze 的按钮并点击
             const btns = document.getElementsByClassName('coze-web-chat-btn');
             if(btns.length > 0) {
                 btns[0].click();
             } else {
-                alert("系统正在初始化，请稍后1秒再试...");
+                // 如果网速慢还没加载出来，提示一下
+                alert("正在建立安全连接，请稍后...");
             }
         }
     </script>
-</body>
-</html>
