@@ -6,25 +6,18 @@
     <title>CourseMaster Pro - 智能教研中台</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ================= 核心样式 (保持高级感) ================= */
+        /* ================= 核心样式 ================= */
         :root { --sidebar-width: 260px; --bg-dark: #0f172a; --glass: rgba(30, 41, 59, 0.7); --border: rgba(255, 255, 255, 0.08); --primary: #3b82f6; }
         body { margin: 0; padding: 0; background-color: var(--bg-dark); font-family: -apple-system, sans-serif; color: white; height: 100vh; overflow: hidden; display: flex; }
         .bg-glow { position: absolute; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 40%); }
-        
-        /* 侧边栏 */
         .sidebar { width: var(--sidebar-width); background: var(--glass); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 24px; z-index: 10; backdrop-filter: blur(20px); }
         .logo { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 700; margin-bottom: 40px; }
         .logo i { color: var(--primary); font-size: 24px; }
         .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; color: #94a3b8; margin-bottom: 8px; cursor: pointer; transition: 0.3s; font-size: 14px; }
         .menu-item.active { background: rgba(59, 130, 246, 0.1); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.2); }
-        .section-title { font-size: 12px; color: #475569; margin: 24px 0 12px 12px; text-transform: uppercase; font-weight: 600; }
-
-        /* 主区域 */
         .main-content { flex: 1; display: flex; flex-direction: column; }
         .top-bar { height: 64px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 0 32px; background: rgba(15, 23, 42, 0.5); }
         .hero-section { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        
-        /* 启动按钮 */
         .launch-card { background: rgba(30, 41, 59, 0.6); border: 1px solid var(--border); padding: 40px; border-radius: 24px; cursor: pointer; transition: all 0.3s; }
         .launch-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2); }
         .launch-icon { font-size: 48px; color: var(--primary); margin-bottom: 20px; animation: pulse 2s infinite; }
@@ -32,14 +25,12 @@
 </head>
 <body>
     <div class="bg-glow"></div>
-
     <aside class="sidebar">
         <div class="logo"><i class="fa-solid fa-graduation-cap"></i><span>CourseMaster</span></div>
         <div class="section-title">教研工具</div>
         <div class="menu-item active"><i class="fa-solid fa-robot"></i> 智能助教 (AI)</div>
         <div class="menu-item"><i class="fa-solid fa-book"></i> 教案生成</div>
     </aside>
-
     <main class="main-content">
         <header class="top-bar">
             <div style="font-weight: 600;">教研控制台</div>
@@ -54,7 +45,7 @@
         </div>
     </main>
 
-    <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.20/libs/cn/index.js"></script>
+    <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.19/libs/cn/index.js"></script>
     <script>
       new CozeWebSDK.WebChatClient({
         config: {
@@ -65,33 +56,38 @@
         },
         auth: {
           type: 'token',
-          /* pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan*/
+          /* 👇 已填入你刚刚发的最新 Token */
           token: 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan', 
           onRefreshToken: function () {
             return 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
           }
         },
-        /* 这里的配置是为了防止白屏，使用了最稳的 mobile 悬浮球布局 */
         ui: {
             base: {
                 layout: 'mobile', 
                 icon: 'https://cdn-icons-png.flaticon.com/512/4712/4712009.png',
                 zIndex: 2000
             },
-            asstBtn: {
-                isNeed: true
-            }
+            asstBtn: { isNeed: true }
         }
       });
 
       function openAI() {
-          const btns = document.getElementsByClassName('coze-web-chat-btn');
-          if(btns.length > 0) btns[0].click();
-          else alert("连接中...如果长时间没反应，请检查 Coze 是否已发布！");
+          /* 稍微延迟一点点，确保 SDK 加载好了再点 */
+          setTimeout(() => {
+              const btns = document.getElementsByClassName('coze-web-chat-btn');
+              if(btns.length > 0) {
+                  btns[0].click();
+              } else {
+                  // 如果中间大按钮还是没反应，提示用户点右下角
+                  alert("系统已就绪！\n\n如果窗口未弹出，请直接点击右下角的【蓝色机器人图标】。");
+              }
+          }, 200);
       }
     </script>
 </body>
 </html>
+
 
 
 
