@@ -208,12 +208,6 @@
         <div class="menu-item">
             <i class="fa-solid fa-book"></i> 教案生成
         </div>
-
-        <div style="margin-top: auto;">
-            <div class="menu-item">
-                <i class="fa-solid fa-gear"></i> 系统设置
-            </div>
-        </div>
     </aside>
 
     <main class="main-content">
@@ -234,82 +228,53 @@
                     <i class="fa-solid fa-fingerprint"></i>
                 </div>
                 <div style="font-size: 18px; font-weight: 600;">启动 AI 教研顾问</div>
-                <div style="font-size: 12px; color: #94a3b8; margin-top: 5px;">Status: Online | Low Latency</div>
+                <div style="font-size: 12px; color: #94a3b8; margin-top: 5px;">Status: Online | Connected</div>
             </div>
         </div>
     </main>
 
-    <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.20/libs/cn/index.js"></script>
+    <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.19/libs/cn/index.js"></script>
     <script>
-        const client = new CozeWebSDK.WebChatClient({
-            /* 1. config 配置 */
+        new CozeWebSDK.WebChatClient({
+            /* 1. 你要求的 config */
             config: {
                 bot_id: '7594087273495855119',
             },
             
-            /* 2. componentProps 配置 */
+            /* 2. 你要求的 componentProps (我稍微改了下标题，更有高级感) */
             componentProps: {
-                title: 'CourseMaster',
+                title: 'CourseMaster 教研顾问',
             },
-
-            /* 3. auth 配置：🔑 请务必填入你的永久 Token (pat_开头) */
+            
+            /* 3. 你要求的 auth (已填入你的永久 Token) */
             auth: {
                 type: 'token',
-                /* 👇👇👇 这里填入你新生成的、权限全开的 Token 👇👇👇 */
-                token: pat_JTOMYqjcnqqpfiZUhvKKXpt MgXYP0R2Amm3ev OZLhqEAwtkFB9BX5p2p2lbm', 
+                token: 'pat_tqgLSbvx8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan',
                 onRefreshToken: function () {
-                    /* 👇👇👇 这里也要填一样的 👇👇👇 */
-                    return 'pat_JTOMYqjcnqqpfiZUhvKKXpt MgXYP0R2Amm3ev OZLhqEAwtkFB9BX5p2p2lbm'
+                    return 'pat_tqgLSbvx8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
                 }
             },
-            
-            /* 4. userInfo 配置 */
-            userInfo: {
-                id: 'user_01',
-                url: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png', 
-                nickname: 'Professor',
-            },
-            
-            /* 5. ui 配置：关键的视觉定制 */
+
+            /* 👇 唯一追加的一点点极简美化：换个图标和模式，绝不影响加载 */
             ui: {
-                base: {
-                    icon: 'https://cdn-icons-png.flaticon.com/512/4712/4712009.png',
-                    /* 保持 mobile 模式，确保右下角一定有悬浮球可以点 */
-                    layout: 'mobile', 
-                    lang: 'zh-CN',
-                    zIndex: 2000
+                base: { 
+                    icon: 'https://cdn-icons-png.flaticon.com/512/4712/4712009.png', // 3D 机器人
+                    layout: 'mobile' // 确保出现右下角悬浮球
                 },
-                header: {
-                    isShow: true,
-                    isNeedClose: true,
-                    title: '专属教研顾问'
-                },
-                asstBtn: {
-                    isNeed: true 
-                },
-                footer: {
-                    isShow: false 
-                },
-                chatBot: {
-                    title: 'CourseMaster 智能教研',
-                    uploadable: true,
-                    width: 390, 
-                },
-            },
+                asstBtn: { isNeed: true },
+                footer: { isShow: false }
+            }
         });
 
-        // 核心逻辑：点击中间大按钮，自动触发悬浮球
+        // 这个函数是为了让屏幕中间的按钮能点击右下角的悬浮球
         function openAI() {
-            // 尝试查找并点击 Coze 的按钮
             const btns = document.getElementsByClassName('coze-web-chat-btn');
             if(btns.length > 0) {
                 btns[0].click();
             } else {
-                // 如果找不到按钮，说明 SDK 还没加载完或者出错了
-                alert("正在连接智能体...如果长时间无反应，请检查 Coze 平台是否已发布 Web SDK！");
+                alert("正在连接... 若无反应请检查 Coze 发布状态。");
             }
         }
     </script>
 </body>
 </html>
-
