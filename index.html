@@ -3,86 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 智能助教系统</title>
+    <title>《设计你喜爱的课程》智能教研系统</title>
     <style>
-        /* 页面美化样式 */
+        /* 全局重置 */
+        * { box-sizing: border-box; }
         body {
             margin: 0;
             padding: 0;
-            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); /* 深蓝科技风背景 */
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* 顶部导航栏 - 增加正规感 */
+        .header {
+            width: 100%;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-area {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            background: #fff;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .status-badge {
+            font-size: 12px;
+            background: rgba(0, 200, 83, 0.2);
+            color: #69f0ae;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 200, 83, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: #00c853;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00c853;
+        }
+
+        /* 主体内容区 */
+        .main-content {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* 卡片容器 */
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 40px;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
             overflow: hidden;
         }
-        .container {
-            text-align: center;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.05); /* 磨砂玻璃效果 */
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            max-width: 90%;
-            width: 400px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        
+        /* 装饰背景光 */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+            animation: rotate 10s linear infinite;
+            z-index: -1;
         }
-        h1 { margin: 0 0 15px 0; font-size: 28px; letter-spacing: 1px; }
-        p { color: #94a3b8; margin-bottom: 30px; line-height: 1.6; }
-        .btn-hint {
-            background: rgba(59, 130, 246, 0.2);
-            border: 1px solid #3b82f6;
-            color: #60a5fa;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-size: 14px;
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        h1 { font-size: 26px; margin-bottom: 10px; letter-spacing: 1px; }
+        .subtitle { color: rgba(255, 255, 255, 0.7); font-size: 14px; margin-bottom: 30px; line-height: 1.6; }
+        
+        .tags { display: flex; gap: 10px; justify-content: center; margin-bottom: 30px; }
+        .tag { font-size: 12px; padding: 5px 12px; background: rgba(255,255,255,0.1); border-radius: 12px; }
+
+        .btn-start {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
             display: inline-block;
-            animation: pulse 2s infinite;
         }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        .btn-start:hover { transform: translateY(-2px); box-shadow: 0 15px 35px rgba(59, 130, 246, 0.6); }
+
+        /* 底部版权 */
+        .footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>🎓 课程智能助教</h1>
-        <p>您的专属 AI 导师已就绪<br>支持 24 小时课程答疑与辅导</p>
-        <div class="btn-hint">👇 点击右下角蓝色图标开始提问</div>
+    <div class="header">
+        <div class="logo-area">
+            <span style="font-size: 18px;">🎓</span> 
+            <span>智慧教研中心</span>
+        </div>
+        <div class="status-badge">
+            <div class="status-dot"></div>
+            系统在线 | 科研版 v2.1
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="card">
+            <h1>《设计你喜爱的课程》<br>AI 专属助教</h1>
+            
+            <div class="tags">
+                <span class="tag">📚 大纲全覆盖</span>
+                <span class="tag">🧠 科研双核模式</span>
+                <span class="tag">🔒 内部专用</span>
+            </div>
+
+            <p class="subtitle">
+                本系统基于 DeepSeek & Coze 双引擎构建<br>
+                已为您开通 <strong>[教师科研/专家]</strong> 权限<br>
+                可同时支持教学答疑与教育学理论研究
+            </p>
+
+            <a href="javascript:void(0)" onclick="openChat()" class="btn-start">
+                💬 点击右下角图标开始对话
+            </a>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2024 数字化课程教研组 | 技术支持：[黄希来团队] <br>
+        Internal Use Only - Restricted Access
     </div>
 
     <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.19/libs/cn/index.js"></script>
     <script>
         new CozeWebSDK.WebChatClient({
             config: {
-                /* 你的 Bot ID，我已经帮你填好了 */
+                /* ================================================= */
+                /*7594087273495855119*/
+                /* ================================================= */
                 bot_id: '7594087273495855119', 
             },
             componentProps: {
-                title: '智能助教',
+                title: '课程专家助手',
             },
             auth: {
                 type: 'token',
-                
-                /* ================================================================= */
-                /* 🔴 🔴 🔴 重要：请把下面的 '在此处粘贴...' 换成你的真实 Token 🔴 🔴 🔴 */
-                /* 注意：一定要保留单引号 ''，只替换里面的中文字 */
-                /* ================================================================= */
-                token: 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan', 
-                
+                /* ================================================= */
+                /*pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan*/
+                /* ================================================= */
+                token: 'pat_XXXXXXXXXXXXXXXXXXXXXXXXXXXX', 
                 onRefreshToken: function () {
-                    /* 这里也要填一样的 */
-                    return 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
+                    return 'pat_XXXXXXXXXXXXXXXXXXXXXXXXXXXX'
                 }
             }
         });
+
+        function openChat() {
+            // 提示用户点击图标，增加交互引导
+            const el = document.querySelector('div[class*="coze-web-chat"]'); 
+            if(el) el.click();
+            else alert("请点击右下角的蓝色图标启动服务");
+        }
     </script>
 </body>
 </html>
-
