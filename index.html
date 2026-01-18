@@ -7,32 +7,32 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ================= 核心 UI ================= */
+        /* ================= UI 样式 (保持高级白风格) ================= */
         :root { --primary: #2563EB; --text-dark: #1e293b; --text-gray: #64748b; }
         body { margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; color: var(--text-dark); overflow-x: hidden; height: 100vh; position: relative; }
 
-        /* 背景流光 */
+        /* 背景 */
         .ambient-light { position: absolute; top: -20%; left: -20%; width: 140%; height: 100vh; background: radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.08), transparent 60%), radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.08), transparent 40%); z-index: -1; animation: float 10s infinite ease-in-out; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
-        /* 顶部导航 */
+        /* 导航 */
         .navbar { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); position: fixed; top: 0; width: 100%; z-index: 100; box-sizing: border-box; }
         .brand { font-weight: 800; font-size: 18px; display: flex; align-items: center; gap: 8px; }
         .tag { font-size: 10px; background: #eff6ff; color: var(--primary); padding: 4px 8px; border-radius: 20px; font-weight: 600; }
 
-        /* 主体内容 */
+        /* 主体 */
         .hero { padding: 140px 24px 20px 24px; text-align: left; position: relative; z-index: 10; }
         .animate-up { animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; transform: translateY(20px); }
-        .delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.2s; } .delay-3 { animation-delay: 0.3s; }
+        .delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.2s; }
 
         h1 { font-size: 40px; line-height: 1.1; font-weight: 800; margin-bottom: 20px; letter-spacing: -1px; background: linear-gradient(to right, #1e293b, #475569); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .subtitle { font-size: 16px; color: var(--text-gray); line-height: 1.6; margin-bottom: 40px; max-width: 90%; }
 
-        /* 按钮样式 */
+        /* 按钮 */
         .cta-btn { background: #000; color: white; border: none; padding: 18px 32px; border-radius: 100px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3); transition: all 0.2s; display: inline-flex; align-items: center; gap: 10px; width: 100%; justify-content: center; user-select: none; }
-        .cta-btn:active { transform: scale(0.98); background: #333; }
+        .cta-btn:active { transform: scale(0.95); }
 
-        /* 功能矩阵 */
+        /* 功能卡片 */
         .features-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 40px; padding: 0 24px 40px 24px; position: relative; z-index: 10; }
         .feature-card { background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(0,0,0,0.05); padding: 20px; border-radius: 16px; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 15px; }
         .f-icon { width: 40px; height: 40px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); font-size: 18px; }
@@ -40,15 +40,9 @@
         .f-text p { margin: 0; font-size: 12px; color: var(--text-gray); }
 
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
-
-        /* 🔴 强制修复小球层级 (暴力置顶) 🔴 */
-        .coze-web-chat-btn {
-            z-index: 2147483647 !important; /* 地球上最大的层级 */
-            display: block !important;
-            opacity: 1 !important;
-            bottom: 20px !important;
-            right: 20px !important;
-        }
+        
+        /* 隐藏掉 Coze 自带的悬浮球（只在视觉上隐藏，实际上还在，方便我们去点击它） */
+        .coze-web-chat-btn { opacity: 0; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -65,14 +59,14 @@
         <p class="subtitle animate-up delay-1">搭载 DeepSeek 双引擎内核，为您提供全天候的课程设计支持。</p>
         
         <div class="animate-up delay-2">
-            <button class="cta-btn" onclick="triggerCoze()">
+            <button class="cta-btn" onclick="openChat()">
                 <span>开始对话</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
     </div>
 
-    <div class="features-grid animate-up delay-3">
+    <div class="features-grid animate-up delay-2">
         <div class="feature-card">
             <div class="f-icon"><i class="fa-solid fa-brain"></i></div>
             <div class="f-text"><h3>深度思维模型</h3><p>核心方法论支持</p></div>
@@ -83,18 +77,15 @@
         </div>
     </div>
 
-    <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.20/libs/cn/index.js"></script>
+    <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.19/libs/cn/index.js"></script>
     <script>
+      // 1. 初始化
       new CozeWebSDK.WebChatClient({
-        config: {
-          bot_id: '7594087273495855119', 
-        },
-        componentProps: {
-          title: 'CourseMaster AI',
-        },
+        config: { bot_id: '7594087273495855119' },
+        componentProps: { title: 'CourseMaster AI' },
         auth: {
           type: 'token',
-          /* 👇 我帮你改回了那个“没有b”的旧 Token，如果不行，请手动把你的新 Token 填进来 */
+          /* 这是你之前生成能用的那个 Token (无拼写错误版) */
           token: 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan', 
           onRefreshToken: function () {
             return 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
@@ -102,32 +93,38 @@
         },
         ui: {
             base: {
-                layout: 'mobile', /* 必须是 mobile */
-                icon: 'https://cdn-icons-png.flaticon.com/512/8943/8943377.png',
-                zIndex: 2147483647
+                layout: 'mobile', /* 必须保留 mobile 布局 */
+                zIndex: 2000
             },
-            asstBtn: { isNeed: true },
+            asstBtn: { 
+                isNeed: true /* 必须让它生成按钮，虽然我们把它隐藏了 */
+            },
             footer: { isShow: false }
         }
       });
 
-      // 触发器逻辑
-      function triggerCoze() {
+      // 2. 暴力点击逻辑
+      function openChat() {
           const btns = document.getElementsByClassName('coze-web-chat-btn');
-          if(btns.length > 0) {
+          if (btns.length > 0) {
+              // 找到了就直接点
               btns[0].click();
           } else {
-              // 如果还是找不到，说明 Token 绝对错了，或者 Web SDK 没发布
-              alert('连接失败！请检查：\n1. Token 是否正确？\n2. Coze 后台是否已重新发布？');
+              // 没找到说明网太慢 SDK 还没加载完，或者 Token 错了
+              // 这里做一个极短的延迟重试，不弹窗烦人
+              setTimeout(() => {
+                  const retryBtns = document.getElementsByClassName('coze-web-chat-btn');
+                  if (retryBtns.length > 0) {
+                      retryBtns[0].click();
+                  } else {
+                      alert("系统加载中...请检查 Token 或网络状态");
+                  }
+              }, 500);
           }
       }
     </script>
 </body>
 </html>
-
-
-
-
 
 
 
