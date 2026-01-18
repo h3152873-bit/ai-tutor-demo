@@ -2,84 +2,158 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>CourseMaster AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ================= UI 样式 (保持高级白风格) ================= */
-        :root { --primary: #2563EB; --text-dark: #1e293b; --text-gray: #64748b; }
-        body { margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; color: var(--text-dark); overflow-x: hidden; height: 100vh; position: relative; }
+        :root {
+            --primary: #2563EB;
+            --text-main: #0F172A;
+            --text-sub: #64748B;
+            --bg-grad: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%);
+        }
 
-        /* 背景流光 */
-        .ambient-light { position: absolute; top: -20%; left: -20%; width: 140%; height: 100vh; background: radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.08), transparent 60%), radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.08), transparent 40%); z-index: -1; animation: float 10s infinite ease-in-out; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        /* 顶部导航 */
-        .navbar { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); position: fixed; top: 0; width: 100%; z-index: 100; box-sizing: border-box; }
-        .brand { font-weight: 800; font-size: 18px; display: flex; align-items: center; gap: 8px; }
-        .tag { font-size: 10px; background: #eff6ff; color: var(--primary); padding: 4px 8px; border-radius: 20px; font-weight: 600; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, Helvetica, sans-serif;
+            /* 使用 dvh 确保在手机浏览器里也是完美全屏 */
+            height: 100dvh; 
+            width: 100vw;
+            background: var(--bg-grad);
+            color: var(--text-main);
+            overflow: hidden; /* 禁止滚动 */
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
 
-        /* 主体内容 */
-        .hero { padding: 140px 24px 20px 24px; text-align: left; position: relative; z-index: 10; }
-        .animate-up { animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; transform: translateY(20px); }
-        .delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.2s; }
+        /* 1. 背景氛围光 (高级感来源) */
+        .glow-bg {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -50px;
+            left: -50px;
+            z-index: 0;
+            animation: breathe 8s infinite ease-in-out;
+        }
+        .glow-bg-2 {
+            top: auto;
+            bottom: -50px;
+            left: auto;
+            right: -100px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            animation: breathe 8s infinite ease-in-out reverse;
+        }
+        @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
 
-        h1 { font-size: 40px; line-height: 1.1; font-weight: 800; margin-bottom: 20px; letter-spacing: -1px; background: linear-gradient(to right, #1e293b, #475569); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .subtitle { font-size: 16px; color: var(--text-gray); line-height: 1.6; margin-bottom: 40px; max-width: 90%; }
+        /* 2. 顶部状态栏占位 */
+        .header {
+            padding: 20px 24px;
+            padding-top: max(20px, env(safe-area-inset-top)); /* 避开刘海 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+        .logo { font-weight: 800; font-size: 18px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
+        .badge { font-size: 11px; background: #E0F2FE; color: #0284C7; padding: 4px 10px; border-radius: 20px; font-weight: 700; }
 
-        /* 核心按钮 */
-        .cta-btn { background: #000; color: white; border: none; padding: 18px 32px; border-radius: 100px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3); transition: all 0.2s; display: inline-flex; align-items: center; gap: 10px; width: 100%; justify-content: center; user-select: none; }
-        .cta-btn:active { transform: scale(0.95); }
+        /* 3. 中间内容区 (垂直居中) */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 32px;
+            z-index: 10;
+            margin-bottom: 60px; /* 稍微往上提一点，视觉重心更好 */
+        }
 
-        /* 功能矩阵 */
-        .features-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 40px; padding: 0 24px 40px 24px; position: relative; z-index: 10; }
-        .feature-card { background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(0,0,0,0.05); padding: 20px; border-radius: 16px; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 15px; }
-        .f-icon { width: 40px; height: 40px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); font-size: 18px; }
-        .f-text h3 { margin: 0 0 4px 0; font-size: 15px; font-weight: 700; }
-        .f-text p { margin: 0; font-size: 12px; color: var(--text-gray); }
+        h1 {
+            font-size: 42px;
+            line-height: 1.1;
+            font-weight: 800;
+            margin: 0 0 20px 0;
+            letter-spacing: -1.5px;
+            background: linear-gradient(135deg, #0F172A 0%, #475569 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        p {
+            font-size: 16px;
+            color: var(--text-sub);
+            line-height: 1.6;
+            margin: 0;
+        }
 
-        /* 🔴 关键：把 Coze 原生按钮透明度设为 0，但保留位置，确保 SDK 正常加载 */
-        .coze-web-chat-btn { opacity: 0 !important; pointer-events: none; } 
+        /* 4. 底部操作区 (大按钮) */
+        .footer-action {
+            padding: 24px;
+            padding-bottom: max(30px, env(safe-area-inset-bottom)); /* 避开底部横条 */
+            z-index: 20;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .start-btn {
+            width: 100%;
+            height: 56px;
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            border-radius: 28px; /* 全圆角 */
+            font-size: 17px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: transform 0.1s;
+            cursor: pointer;
+        }
+        .start-btn:active { transform: scale(0.96); }
+
+        /* 隐藏掉官方按钮，但保留点击能力 */
+        .coze-web-chat-btn { opacity: 0 !important; pointer-events: none; }
     </style>
 </head>
 <body>
 
-    <div class="ambient-light"></div>
+    <div class="glow-bg"></div>
+    <div class="glow-bg glow-bg-2"></div>
 
-    <nav class="navbar">
-        <div class="brand"><i class="fa-solid fa-layer-group" style="color: #2563EB;"></i>CourseMaster</div>
-        <div class="tag">PRO v2.1</div>
-    </nav>
-
-    <div class="hero">
-        <h1 class="animate-up">重新定义<br>你的教研方式</h1>
-        <p class="subtitle animate-up delay-1">搭载 DeepSeek 双引擎内核，为您提供全天候的课程设计支持。</p>
-        
-        <div class="animate-up delay-2">
-            <button class="cta-btn" onclick="openChat()">
-                <span>开始对话</span>
-                <i class="fa-solid fa-arrow-right"></i>
-            </button>
+    <div class="header">
+        <div class="logo">
+            <i class="fa-solid fa-shapes" style="color: var(--primary);"></i>
+            CourseMaster
         </div>
+        <div class="badge">PRO</div>
     </div>
 
-    <div class="features-grid animate-up delay-2">
-        <div class="feature-card">
-            <div class="f-icon"><i class="fa-solid fa-brain"></i></div>
-            <div class="f-text"><h3>深度思维模型</h3><p>核心方法论支持</p></div>
-        </div>
-        <div class="feature-card">
-            <div class="f-icon"><i class="fa-solid fa-bolt"></i></div>
-            <div class="f-text"><h3>实时响应</h3><p>毫秒级极速反馈</p></div>
-        </div>
+    <div class="content">
+        <h1>重新定义<br>你的教研</h1>
+        <p>搭载 DeepSeek 双引擎内核<br>全天候的课程设计专家</p>
+    </div>
+
+    <div class="footer-action">
+        <button class="start-btn" onclick="openChat()">
+            开始对话
+            <i class="fa-solid fa-arrow-right" style="font-size: 14px;"></i>
+        </button>
     </div>
 
     <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.20/libs/cn/index.js"></script>
     <script>
-      // 1. 初始化 (和你刚才测试成功的一模一样)
       new CozeWebSDK.WebChatClient({
         config: {
           bot_id: '7594087273495855119', 
@@ -89,7 +163,7 @@
         },
         auth: {
           type: 'token',
-          /* 👇👇👇 请确保这里是刚才测试成功的那个 Token 👇👇👇 */
+          /* 你测试成功的 Token */
           token: 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan', 
           onRefreshToken: function () {
             return 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
@@ -97,32 +171,30 @@
         },
         ui: {
             base: {
-                layout: 'mobile', /* 必须是 mobile */
+                layout: 'mobile',
                 zIndex: 2000
             },
-            asstBtn: { 
-                isNeed: true /* 必须让它生成按钮，然后我们用 CSS 隐藏它 */
-            },
+            asstBtn: { isNeed: true },
             footer: { isShow: false }
         }
       });
 
-      // 2. 点击大按钮 -> 触发 SDK 按钮
       function openChat() {
           const btns = document.getElementsByClassName('coze-web-chat-btn');
           if (btns.length > 0) {
               btns[0].click();
           } else {
-              // 既然测试通了，如果这里还没加载出来，稍微等一下就行
+              // 容错：如果还没加载出来，稍微等一下自动点
               setTimeout(() => {
-                  const retryBtns = document.getElementsByClassName('coze-web-chat-btn');
-                  if (retryBtns.length > 0) retryBtns[0].click();
-              }, 500);
+                 const retry = document.getElementsByClassName('coze-web-chat-btn');
+                 if(retry.length > 0) retry[0].click();
+              }, 300);
           }
       }
     </script>
 </body>
 </html>
+
 
 
 
