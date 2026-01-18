@@ -242,34 +242,38 @@
     <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.19/libs/cn/index.js"></script>
     <script>
         const client = new CozeWebSDK.WebChatClient({
-            /* 1. config 配置：指定 Bot ID */
+            /* 1. config 配置 */
             config: {
-                type: 'bot',
-                bot_id: '7594087273495855119', //
-                isIframe: false,
+                bot_id: '7594087273495855119',
             },
             
-            /* 2. auth 配置：这里我帮你填入了正确的永久 Token */
+            /* 2. componentProps 配置 (兼容旧版调用) */
+            componentProps: {
+                title: 'CourseMaster',
+            },
+
+            /* 3. auth 配置：🔑 这里我帮你填入了正确的永久 Token */
             auth: {
                 type: 'token',
-                // 这是你之前生成的永久 pat_ Token
                 token: 'pat_tqgLSbvx8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan', 
-                onRefreshToken: async () => 'pat_tqgLSbvx8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
+                onRefreshToken: function () {
+                    return 'pat_tqgLSbvx8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
+                }
             },
             
-            /* 3. userInfo 配置：让它在后台显示自定义的用户身份 */
+            /* 4. userInfo 配置：显示在对话框里的用户身份 */
             userInfo: {
-                id: 'professor_01',
-                url: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png', // 这是一个教授头像
+                id: 'user_01',
+                url: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png', // 教授头像
                 nickname: 'Professor',
             },
             
-            /* 4. ui 配置：这里是“视觉风格”的关键 */
+            /* 5. ui 配置：关键的视觉定制 */
             ui: {
                 base: {
-                    /* 这里使用了 3D 机器人图标，配合你的深色背景，而不是默认图标 */
+                    /* 图标换成科技风，匹配深色背景 */
                     icon: 'https://cdn-icons-png.flaticon.com/512/4712/4712009.png',
-                    /* layout 设为 'mobile'，这样右下角会有一个悬浮球，符合你的要求 */
+                    /* 使用 mobile 模式，确保右下角有悬浮球 */
                     layout: 'mobile', 
                     lang: 'zh-CN',
                     zIndex: 2000
@@ -277,23 +281,23 @@
                 header: {
                     isShow: true,
                     isNeedClose: true,
-                    title: 'CourseMaster 智能教研' // 自定义标题
+                    title: '专属教研顾问'
                 },
                 asstBtn: {
-                    isNeed: true // 开启右下角悬浮球
+                    isNeed: true // 确保悬浮球显示
                 },
                 footer: {
-                    isShow: false, // 隐藏版权信息，显得像自研系统
+                    isShow: false // 隐藏广告
                 },
                 chatBot: {
-                    title: '专属教研顾问',
+                    title: 'CourseMaster 智能教研',
                     uploadable: true,
-                    width: 400,
+                    width: 390, // 手机风格宽度
                 },
             },
         });
 
-        // 核心逻辑：点击中间大按钮，自动点击右下角的悬浮球
+        // 核心逻辑：点击中间大按钮，自动触发悬浮球
         function openAI() {
             const btns = document.getElementsByClassName('coze-web-chat-btn');
             if(btns.length > 0) {
@@ -305,5 +309,4 @@
     </script>
 </body>
 </html>
-
 
