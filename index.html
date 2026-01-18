@@ -239,7 +239,7 @@
         </div>
     </main>
 
-    <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.19/libs/cn/index.js"></script>
+    <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.20/libs/cn/index.js"></script>
     <script>
         const client = new CozeWebSDK.WebChatClient({
             /* 1. config 配置 */
@@ -247,33 +247,34 @@
                 bot_id: '7594087273495855119',
             },
             
-            /* 2. componentProps 配置 (兼容旧版调用) */
+            /* 2. componentProps 配置 */
             componentProps: {
                 title: 'CourseMaster',
             },
 
-            /* 3. auth 配置：🔑 这里我帮你填入了正确的永久 Token */
+            /* 3. auth 配置：🔑 请务必填入你的永久 Token (pat_开头) */
             auth: {
                 type: 'token',
-                token: 'pat_tqgLSbvx8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan', 
+                /* 👇👇👇 这里填入你新生成的、权限全开的 Token 👇👇👇 */
+                token: pat_JTOMYqjcnqqpfiZUhvKKXpt MgXYP0R2Amm3ev OZLhqEAwtkFB9BX5p2p2lbm', 
                 onRefreshToken: function () {
-                    return 'pat_tqgLSbvx8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
+                    /* 👇👇👇 这里也要填一样的 👇👇👇 */
+                    return 'pat_JTOMYqjcnqqpfiZUhvKKXpt MgXYP0R2Amm3ev OZLhqEAwtkFB9BX5p2p2lbm'
                 }
             },
             
-            /* 4. userInfo 配置：显示在对话框里的用户身份 */
+            /* 4. userInfo 配置 */
             userInfo: {
                 id: 'user_01',
-                url: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png', // 教授头像
+                url: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png', 
                 nickname: 'Professor',
             },
             
             /* 5. ui 配置：关键的视觉定制 */
             ui: {
                 base: {
-                    /* 图标换成科技风，匹配深色背景 */
                     icon: 'https://cdn-icons-png.flaticon.com/512/4712/4712009.png',
-                    /* 使用 mobile 模式，确保右下角有悬浮球 */
+                    /* 保持 mobile 模式，确保右下角一定有悬浮球可以点 */
                     layout: 'mobile', 
                     lang: 'zh-CN',
                     zIndex: 2000
@@ -284,26 +285,28 @@
                     title: '专属教研顾问'
                 },
                 asstBtn: {
-                    isNeed: true // 确保悬浮球显示
+                    isNeed: true 
                 },
                 footer: {
-                    isShow: false // 隐藏广告
+                    isShow: false 
                 },
                 chatBot: {
                     title: 'CourseMaster 智能教研',
                     uploadable: true,
-                    width: 390, // 手机风格宽度
+                    width: 390, 
                 },
             },
         });
 
         // 核心逻辑：点击中间大按钮，自动触发悬浮球
         function openAI() {
+            // 尝试查找并点击 Coze 的按钮
             const btns = document.getElementsByClassName('coze-web-chat-btn');
             if(btns.length > 0) {
                 btns[0].click();
             } else {
-                alert("正在建立安全连接，请稍后...");
+                // 如果找不到按钮，说明 SDK 还没加载完或者出错了
+                alert("正在连接智能体...如果长时间无反应，请检查 Coze 平台是否已发布 Web SDK！");
             }
         }
     </script>
