@@ -3,233 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 课程设计教研中台</title>
+    <title>CourseMaster AI - 智能教研系统</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* ==================== 核心样式区 ==================== */
+        /* ================= 核心视觉样式 ================= */
         :root {
-            --primary-color: #3b82f6;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-glow: 0 0 10px rgba(59, 130, 246, 0.5);
+            --bg-color: #020617; /* 深空黑 */
+            --card-bg: rgba(30, 41, 59, 0.5);
+            --primary: #3b82f6;
+            --accent: #8b5cf6;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
         }
 
         body {
             margin: 0;
             padding: 0;
-            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            /* 高端深蓝渐变背景 */
-            background: radial-gradient(circle at 50% 30%, #1e293b 0%, #0f172a 100%);
+            background-color: var(--bg-color);
+            /* 极光背景特效 */
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 25%);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-main);
             height: 100vh;
             display: flex;
             flex-direction: column;
-            color: white;
             overflow: hidden;
-            user-select: none; /* 防止选中文字，更有APP感 */
         }
 
-        /* 背景动态网格线 - 增加科技感 */
-        .grid-bg {
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
-            animation: gridMove 20s linear infinite;
-            z-index: -1;
-        }
-        @keyframes gridMove { 0% { transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px); } 100% { transform: perspective(500px) rotateX(60deg) translateY(50px) translateZ(-200px); } }
-
-        /* 顶部状态栏 */
-        .top-bar {
-            padding: 20px 40px;
+        /* 顶部导航 */
+        .navbar {
+            padding: 24px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            backdrop-filter: blur(5px);
-            z-index: 10;
-        }
-        .brand {
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .badge {
-            font-size: 12px;
-            padding: 4px 12px;
-            background: rgba(59, 130, 246, 0.2);
-            border: 1px solid #3b82f6;
-            color: #60a5fa;
-            border-radius: 4px;
-            box-shadow: var(--text-glow);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
         }
 
-        /* 中间核心交互区 */
-        .hero-section {
+        .brand {
+            font-weight: 800;
+            font-size: 20px;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .brand span {
+            background: linear-gradient(to right, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .version-badge {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 99px;
+            font-size: 12px;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        /* 主体区域 */
+        .hero {
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            text-align: center;
+            padding: 20px;
             position: relative;
-            z-index: 5;
         }
 
-        .hero-title {
-            font-size: 48px;
+        /* 标题特效 */
+        h1 {
+            font-size: 56px;
+            line-height: 1.1;
             font-weight: 800;
-            margin-bottom: 10px;
-            background: linear-gradient(to right, #fff, #94a3b8);
+            margin-bottom: 24px;
+            letter-spacing: -2px;
+            background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.7) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        
-        .hero-subtitle {
-            font-size: 18px;
-            color: #94a3b8;
-            margin-bottom: 60px;
-            font-weight: 300;
-            letter-spacing: 1px;
         }
 
-        /* 核心大按钮 */
-        .launch-btn {
-            position: relative;
-            padding: 20px 60px;
-            font-size: 24px;
-            font-weight: 600;
-            color: white;
-            background: transparent;
-            border: none;
+        .subtitle {
+            font-size: 18px;
+            color: var(--text-sub);
+            max-width: 600px;
+            margin-bottom: 48px;
+            line-height: 1.6;
+        }
+
+        /* 高级卡片按钮 */
+        .ai-trigger-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 4px;
+            border-radius: 50px; /* 胶囊形状 */
             cursor: pointer;
-            transition: all 0.3s ease;
-            group: hover;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
-        
-        /* 按钮的复杂边框效果 */
-        .launch-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 50px;
-            padding: 2px;
-            background: linear-gradient(45deg, #3b82f6, #8b5cf6, #3b82f6);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            animation: borderRotate 4s linear infinite;
+
+        .ai-trigger-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.3);
+            border-color: rgba(59, 130, 246, 0.4);
         }
-        
-        .launch-btn-inner {
-            background: rgba(59, 130, 246, 0.2);
-            padding: 20px 60px;
-            border-radius: 50px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+
+        .btn-inner {
+            background: #0f172a;
+            padding: 16px 48px;
+            border-radius: 46px;
             display: flex;
             align-items: center;
-            gap: 15px;
-            transition: all 0.3s;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 18px;
         }
 
-        .launch-btn:hover .launch-btn-inner {
-            background: rgba(59, 130, 246, 0.4);
-            box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
-            transform: scale(1.05);
+        .sparkle-icon {
+            font-size: 20px;
+            animation: pulse 2s infinite;
         }
 
-        /* 状态指示器 */
-        .status-indicators {
-            margin-top: 60px;
+        /* 底部状态栏 */
+        .footer-status {
+            position: absolute;
+            bottom: 40px;
             display: flex;
-            gap: 30px;
+            gap: 40px;
         }
+
         .stat-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-size: 12px;
-            color: #64748b;
+            gap: 4px;
         }
-        .stat-val {
-            font-size: 16px;
-            color: #fff;
-            font-weight: bold;
-            margin-bottom: 5px;
+        .stat-label { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-value { font-size: 14px; color: #cbd5e1; font-family: monospace; }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
-        /* 隐藏掉Coze原本那个丑丑的右下角气泡，但保留功能 */
-        /* 注意：我们通过CSS把它设为透明/不可见，但点击大按钮时依然触发它 */
-        .coze-web-chat-btn {
-            opacity: 0 !important; 
-            pointer-events: none !important; /* 平时点不到 */
-            transform: scale(0) !important;
-        }
+        /* 隐藏Coze原本的按钮 */
+        .coze-web-chat-btn { display: none !important; }
 
     </style>
 </head>
 <body>
 
-    <div class="grid-bg"></div>
-
-    <div class="top-bar">
+    <nav class="navbar">
         <div class="brand">
-            <span style="color:#3b82f6">❖</span> 课程设计教研中台
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#60a5fa"/>
+            </svg>
+            <span>CourseMaster AI</span>
         </div>
-        <div class="badge">TEACHER PRO v2.1</div>
-    </div>
+        <div class="version-badge">
+            <div class="status-dot"></div>
+            TEACHER PRO v2.1 (Research)
+        </div>
+    </nav>
 
-    <div class="hero-section">
-        <div class="hero-title">INTELLIGENT TUTOR</div>
-        <div class="hero-subtitle">基于 DeepSeek 内核 · 《设计你喜爱的课程》专属教研系统</div>
+    <main class="hero">
+        <h1>《设计你喜爱的课程》<br>专属教研中台</h1>
+        <p class="subtitle">
+            基于 DeepSeek 内核驱动的双模式教学系统。<br>
+            已为您自动加载 <strong>教师科研/专家模式</strong> 权限。
+        </p>
 
-        <button class="launch-btn" onclick="openSystem()">
-            <div class="launch-btn-inner">
-                <span>⚡</span>
+        <div class="ai-trigger-card" onclick="openAI()">
+            <div class="btn-inner">
+                <span class="sparkle-icon">✨</span>
                 <span>启动智能教研助手</span>
             </div>
-        </button>
+        </div>
 
-        <div class="status-indicators">
+        <div class="footer-status">
             <div class="stat-item">
-                <div class="stat-val">Online</div>
-                <div>知识库状态</div>
+                <span class="stat-label">Model</span>
+                <span class="stat-value">GPT-4o / DeepSeek</span>
             </div>
             <div class="stat-item">
-                <div class="stat-val">0.02s</div>
-                <div>响应延迟</div>
+                <span class="stat-label">Latency</span>
+                <span class="stat-value">24ms</span>
             </div>
             <div class="stat-item">
-                <div class="stat-val">双核</div>
-                <div>运行模式</div>
+                <span class="stat-label">Database</span>
+                <span class="stat-value">Connected</span>
             </div>
         </div>
-    </div>
+    </main>
 
     <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.19/libs/cn/index.js"></script>
     <script>
-        // 初始化客户端
         const client = new CozeWebSDK.WebChatClient({
             config: {
                 /* ========================================================== */
-                /* 🔴 必须修改：这里填你的 Bot ID */
+                /* 🔴 请把你的 bot_id 填在这里 (保留单引号) */
                 /* ========================================================== */
                 bot_id: '7594087273495855119', 
             },
             componentProps: {
-                title: '课程专家助手', // 聊天框顶部的标题
+                title: '课程专家助手',
             },
             auth: {
                 type: 'token',
                 /* ========================================================== */
-                /* 🔴 必须修改：这里填你那个 pat_ 开头的真 Token */
+                /* 🔴 请把你的 pat_ 开头的那串乱码填在这里 (保留单引号) */
                 /* ========================================================== */
                 token: 'pat_XXXXXXXXXXXXXXXXXXXXXXXXXXXX', 
                 onRefreshToken: function () {
@@ -238,23 +239,14 @@
             }
         });
 
-        // 核心逻辑：点击大按钮，自动打开聊天框
-        function openSystem() {
-            // 这里我们调用 Coze SDK 内部的方法来打开聊天窗口
-            // 这种方式比点击图标更高级，直接唤起
-            try {
-                const chatBtn = document.querySelector('[class*="coze-web-chat-btn"]');
-                if (chatBtn) {
-                    // 临时恢复点击能力以触发
-                    chatBtn.style.pointerEvents = 'auto'; 
-                    chatBtn.click();
-                    // 触发后再隐藏回去（可选，看你是否希望聊天框打开后右下角还有图标）
-                } else {
-                    // 如果还没加载完
-                    alert("系统正在连接云端知识库，请稍后 2 秒再试...");
-                }
-            } catch (e) {
-                console.error("启动失败", e);
+        // 核心逻辑：点击按钮唤起 Coze
+        function openAI() {
+            // 找到被我们隐藏的Coze按钮并点击它
+            const btns = document.getElementsByClassName('coze-web-chat-btn');
+            if(btns.length > 0) {
+                btns[0].click();
+            } else {
+                alert("系统正在初始化，请稍后1秒再试...");
             }
         }
     </script>
