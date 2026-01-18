@@ -11,7 +11,7 @@
             --primary: #2563EB;
             --text-main: #0F172A;
             --text-sub: #64748B;
-            --bg-grad: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%);
+            --bg-grad: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -19,9 +19,8 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Inter', -apple-system, Helvetica, sans-serif;
-            /* 使用 dvh 确保在手机浏览器里也是完美全屏 */
-            height: 100dvh; 
+            font-family: 'Inter', -apple-system, sans-serif;
+            height: 100dvh; /* 手机全屏高度 */
             width: 100vw;
             background: var(--bg-grad);
             color: var(--text-main);
@@ -31,99 +30,111 @@
             position: relative;
         }
 
-        /* 1. 背景氛围光 (高级感来源) */
+        /* 1. 背景光效 (保留高级感) */
         .glow-bg {
             position: absolute;
             width: 300px;
             height: 300px;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, transparent 70%);
             border-radius: 50%;
-            top: -50px;
-            left: -50px;
-            z-index: 0;
+            top: -80px; left: -50px; z-index: 0;
             animation: breathe 8s infinite ease-in-out;
         }
         .glow-bg-2 {
-            top: auto;
-            bottom: -50px;
-            left: auto;
-            right: -100px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            top: auto; bottom: -50px; left: auto; right: -80px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
             animation: breathe 8s infinite ease-in-out reverse;
         }
         @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
 
-        /* 2. 顶部状态栏占位 */
+        /* 2. 顶部 Header */
         .header {
             padding: 20px 24px;
-            padding-top: max(20px, env(safe-area-inset-top)); /* 避开刘海 */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 10;
+            padding-top: max(20px, env(safe-area-inset-top));
+            display: flex; justify-content: space-between; align-items: center; z-index: 10;
         }
         .logo { font-weight: 800; font-size: 18px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
         .badge { font-size: 11px; background: #E0F2FE; color: #0284C7; padding: 4px 10px; border-radius: 20px; font-weight: 700; }
 
-        /* 3. 中间内容区 (垂直居中) */
+        /* 3. 中间内容区 (自适应高度) */
         .content {
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            padding: 0 32px;
+            justify-content: center; /* 垂直居中 */
+            padding: 0 24px;
             z-index: 10;
-            margin-bottom: 60px; /* 稍微往上提一点，视觉重心更好 */
         }
 
         h1 {
-            font-size: 42px;
+            font-size: 36px; /* 稍微调小一点以放下更多内容 */
             line-height: 1.1;
             font-weight: 800;
-            margin: 0 0 20px 0;
-            letter-spacing: -1.5px;
+            margin: 0 0 10px 0;
+            letter-spacing: -1px;
             background: linear-gradient(135deg, #0F172A 0%, #475569 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
-        p {
-            font-size: 16px;
-            color: var(--text-sub);
-            line-height: 1.6;
-            margin: 0;
+        
+        .main-desc {
+            font-size: 15px; color: var(--text-sub); margin-bottom: 30px;
         }
 
-        /* 4. 底部操作区 (大按钮) */
+        /* 4. 核心功能列表 (你要的那些文字) */
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(0,0,0,0.04);
+            backdrop-filter: blur(10px);
+            padding: 16px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.2s;
+        }
+        
+        .f-icon {
+            width: 36px; height: 36px;
+            background: #fff;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            font-size: 16px;
+            flex-shrink: 0; /* 防止图标被挤压 */
+        }
+        
+        .f-text { display: flex; flex-direction: column; justify-content: center; }
+        .f-text h3 { margin: 0 0 2px 0; font-size: 14px; font-weight: 700; color: var(--text-main); }
+        .f-text p { margin: 0; font-size: 12px; color: var(--text-sub); line-height: 1.3; }
+
+        /* 5. 底部操作栏 */
         .footer-action {
             padding: 24px;
-            padding-bottom: max(30px, env(safe-area-inset-bottom)); /* 避开底部横条 */
+            padding-bottom: max(30px, env(safe-area-inset-bottom));
             z-index: 20;
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(0,0,0,0.05);
+            /* background: rgba(255,255,255,0.8); */ /* 去掉背景，显得更通透 */
         }
 
         .start-btn {
-            width: 100%;
-            height: 56px;
-            background: #000000;
-            color: #ffffff;
-            border: none;
-            border-radius: 28px; /* 全圆角 */
-            font-size: 17px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            width: 100%; height: 56px;
+            background: #000000; color: #ffffff;
+            border: none; border-radius: 28px;
+            font-size: 17px; font-weight: 600;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            transition: transform 0.1s;
             cursor: pointer;
         }
         .start-btn:active { transform: scale(0.96); }
 
-        /* 隐藏掉官方按钮，但保留点击能力 */
+        /* 隐藏官方悬浮球 */
         .coze-web-chat-btn { opacity: 0 !important; pointer-events: none; }
     </style>
 </head>
@@ -133,16 +144,39 @@
     <div class="glow-bg glow-bg-2"></div>
 
     <div class="header">
-        <div class="logo">
-            <i class="fa-solid fa-shapes" style="color: var(--primary);"></i>
-            CourseMaster
-        </div>
+        <div class="logo"><i class="fa-solid fa-shapes" style="color: var(--primary);"></i>CourseMaster</div>
         <div class="badge">PRO</div>
     </div>
 
     <div class="content">
         <h1>重新定义<br>你的教研</h1>
-        <p>搭载 DeepSeek 双引擎内核<br>全天候的课程设计专家</p>
+        <p class="main-desc">DeepSeek 双引擎内核驱动</p>
+
+        <div class="feature-list">
+            <div class="feature-item">
+                <div class="f-icon"><i class="fa-solid fa-brain"></i></div>
+                <div class="f-text">
+                    <h3>深度思维模型</h3>
+                    <p>基于《设计你喜爱的课程》核心方法论</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="f-icon"><i class="fa-solid fa-bolt"></i></div>
+                <div class="f-text">
+                    <h3>实时响应</h3>
+                    <p>毫秒级延迟，像真人一样流畅交流</p>
+                </div>
+            </div>
+
+            <div class="feature-item">
+                <div class="f-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <div class="f-text">
+                    <h3>专家级知识库</h3>
+                    <p>已通过教育部标准教研数据校验</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="footer-action">
@@ -163,10 +197,10 @@
         },
         auth: {
           type: 'token',
-          /* 你测试成功的 Token */
-          token: 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan', 
+          /* 你刚才验证成功的 Token */
+          token: 'pat_tqgLSbvx8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan', 
           onRefreshToken: function () {
-            return 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
+            return 'pat_tqgLSbvx8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
           }
         },
         ui: {
@@ -184,7 +218,7 @@
           if (btns.length > 0) {
               btns[0].click();
           } else {
-              // 容错：如果还没加载出来，稍微等一下自动点
+              // 容错重试
               setTimeout(() => {
                  const retry = document.getElementsByClassName('coze-web-chat-btn');
                  if(retry.length > 0) retry[0].click();
