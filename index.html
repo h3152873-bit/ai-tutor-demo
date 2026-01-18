@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ================= 保持高级 SaaS UI 不变 ================= */
+        /* ================= 核心 UI ================= */
         :root { --primary: #2563EB; --text-dark: #1e293b; --text-gray: #64748b; }
         body { margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; color: var(--text-dark); overflow-x: hidden; height: 100vh; position: relative; }
 
@@ -28,7 +28,7 @@
         h1 { font-size: 40px; line-height: 1.1; font-weight: 800; margin-bottom: 20px; letter-spacing: -1px; background: linear-gradient(to right, #1e293b, #475569); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .subtitle { font-size: 16px; color: var(--text-gray); line-height: 1.6; margin-bottom: 40px; max-width: 90%; }
 
-        /* 核心按钮 */
+        /* 按钮样式 */
         .cta-btn { background: #000; color: white; border: none; padding: 18px 32px; border-radius: 100px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3); transition: all 0.2s; display: inline-flex; align-items: center; gap: 10px; width: 100%; justify-content: center; user-select: none; }
         .cta-btn:active { transform: scale(0.98); background: #333; }
 
@@ -40,6 +40,15 @@
         .f-text p { margin: 0; font-size: 12px; color: var(--text-gray); }
 
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+        /* 🔴 强制修复小球层级 (暴力置顶) 🔴 */
+        .coze-web-chat-btn {
+            z-index: 2147483647 !important; /* 地球上最大的层级 */
+            display: block !important;
+            opacity: 1 !important;
+            bottom: 20px !important;
+            right: 20px !important;
+        }
     </style>
 </head>
 <body>
@@ -56,7 +65,7 @@
         <p class="subtitle animate-up delay-1">搭载 DeepSeek 双引擎内核，为您提供全天候的课程设计支持。</p>
         
         <div class="animate-up delay-2">
-            <button class="cta-btn" onclick="openAIChat()">
+            <button class="cta-btn" onclick="triggerCoze()">
                 <span>开始对话</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
@@ -76,8 +85,7 @@
 
     <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.20/libs/cn/index.js"></script>
     <script>
-      // 1. 初始化 (绝对标准写法)
-      const client = new CozeWebSDK.WebChatClient({
+      new CozeWebSDK.WebChatClient({
         config: {
           bot_id: '7594087273495855119', 
         },
@@ -86,16 +94,36 @@
         },
         auth: {
           type: 'token',
-          /* 你的 Token，确保正确 */
-          token: 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan', 
+          /* 👇 我帮你改回了那个“没有b”的旧 Token，如果不行，请手动把你的新 Token 填进来 */
+          token: 'pat_tqgLSbvx8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan', 
           onRefreshToken: function () {
-            return 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
+            return 'pat_tqgLSbvx8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
           }
         },
         ui: {
             base: {
-                layout: 'mobile',
+                layout: 'mobile', /* 必须是 mobile */
+                icon: 'https://cdn-icons-png.flaticon.com/512/8943/8943377.png',
+                zIndex: 2147483647
+            },
+            asstBtn: { isNeed: true },
+            footer: { isShow: false }
+        }
+      });
 
+      // 触发器逻辑
+      function triggerCoze() {
+          const btns = document.getElementsByClassName('coze-web-chat-btn');
+          if(btns.length > 0) {
+              btns[0].click();
+          } else {
+              // 如果还是找不到，说明 Token 绝对错了，或者 Web SDK 没发布
+              alert('连接失败！请检查：\n1. Token 是否正确？\n2. Coze 后台是否已重新发布？');
+          }
+      }
+    </script>
+</body>
+</html>
 
 
 
