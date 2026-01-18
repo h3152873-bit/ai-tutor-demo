@@ -3,214 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CourseMaster AI - 智能教研系统</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>CourseMaster Pro - 智能教研中台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ================= 核心视觉样式 ================= */
+        /* ================= 样式重置与基础设置 ================= */
         :root {
-            --bg-color: #020617; /* 深空黑 */
-            --card-bg: rgba(30, 41, 59, 0.5);
+            --sidebar-width: 260px;
+            --bg-dark: #0f172a;
+            --glass: rgba(30, 41, 59, 0.7);
+            --border: rgba(255, 255, 255, 0.08);
             --primary: #3b82f6;
-            --accent: #8b5cf6;
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
         }
 
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--bg-color);
-            /* 极光背景特效 */
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 25%);
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            color: var(--text-main);
+            background-color: var(--bg-dark);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: white;
             height: 100vh;
-            display: flex;
-            flex-direction: column;
             overflow: hidden;
+            display: flex;
         }
 
-        /* 顶部导航 */
-        .navbar {
-            padding: 24px 40px;
+        /* 背景动态光效 */
+        .bg-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 40%);
+        }
+
+        /* ================= 左侧侧边栏 ================= */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--glass);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            z-index: 10;
+            backdrop-filter: blur(20px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: #fff;
+        }
+        .logo i { color: var(--primary); font-size: 24px; }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+
+        .menu-item.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .menu-item:hover:not(.active) {
+            background: rgba(255,255,255,0.05);
+            color: #cbd5e1;
+        }
+
+        .section-title {
+            font-size: 12px;
+            color: #475569;
+            margin: 24px 0 12px 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* ================= 右侧主区域 ================= */
+        .main-content {
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-bar {
+            height: 64px;
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
+            padding: 0 32px;
+            background: rgba(15, 23, 42, 0.5);
         }
 
-        .brand {
-            font-weight: 800;
-            font-size: 20px;
-            letter-spacing: -0.5px;
+        .page-title { font-size: 16px; font-weight: 600; color: #e2e8f0; }
+        
+        .user-profile {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-        
-        .brand span {
-            background: linear-gradient(to right, #60a5fa, #c084fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .version-badge {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 6px 12px;
-            border-radius: 99px;
-            font-size: 12px;
-            color: var(--text-sub);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            background-color: #10b981;
+        .avatar {
+            width: 32px; 
+            height: 32px; 
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6); 
             border-radius: 50%;
-            box-shadow: 0 0 8px #10b981;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
         }
 
-        /* 主体区域 */
-        .hero {
+        /* 中间核心交互区 */
+        .hero-section {
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 20px;
-            position: relative;
         }
 
-        /* 标题特效 */
-        h1 {
-            font-size: 56px;
-            line-height: 1.1;
+        .hero-title {
+            font-size: 36px;
             font-weight: 800;
-            margin-bottom: 24px;
-            letter-spacing: -2px;
-            background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+            background: linear-gradient(to right, #fff, #94a3b8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .hero-subtitle {
+            color: #64748b;
+            margin-bottom: 40px;
         }
 
-        .subtitle {
-            font-size: 18px;
-            color: var(--text-sub);
-            max-width: 600px;
-            margin-bottom: 48px;
-            line-height: 1.6;
-        }
-
-        /* 高级卡片按钮 */
-        .ai-trigger-card {
-            background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 4px;
-            border-radius: 50px; /* 胶囊形状 */
+        /* 大按钮样式 */
+        .launch-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid var(--border);
+            padding: 40px;
+            border-radius: 24px;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s;
             position: relative;
+            overflow: hidden;
         }
-
-        .ai-trigger-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.3);
-            border-color: rgba(59, 130, 246, 0.4);
+        .launch-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
         }
-
-        .btn-inner {
-            background: #0f172a;
-            padding: 16px 48px;
-            border-radius: 46px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 600;
-            font-size: 18px;
-        }
-
-        .sparkle-icon {
-            font-size: 20px;
+        .launch-icon {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 20px;
             animation: pulse 2s infinite;
         }
-
-        /* 底部状态栏 */
-        .footer-status {
-            position: absolute;
-            bottom: 40px;
-            display: flex;
-            gap: 40px;
-        }
-
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
-        .stat-label { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
-        .stat-value { font-size: 14px; color: #cbd5e1; font-family: monospace; }
-
+        
         @keyframes pulse {
             0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.9); }
+            50% { opacity: 0.7; transform: scale(0.95); }
             100% { opacity: 1; transform: scale(1); }
         }
-
-        /* 隐藏Coze原本的按钮 */
-        .coze-web-chat-btn { display: none !important; }
 
     </style>
 </head>
 <body>
+    <div class="bg-glow"></div>
 
-    <nav class="navbar">
-        <div class="brand">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#60a5fa"/>
-            </svg>
-            <span>CourseMaster AI</span>
-        </div>
-        <div class="version-badge">
-            <div class="status-dot"></div>
-            TEACHER PRO v2.1 (Research)
-        </div>
-    </nav>
-
-    <main class="hero">
-        <h1>《设计你喜爱的课程》<br>专属教研平台</h1>
-        <p class="subtitle">
-            基于 DeepSeek 内核驱动的双模式教学系统。<br>
-            已为您自动加载 <strong>教师科研/专家模式</strong> 权限。
-        </p>
-
-        <div class="ai-trigger-card" onclick="openAI()">
-            <div class="btn-inner">
-                <span class="sparkle-icon">✨</span>
-                <span>启动智能教研助手</span>
-            </div>
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>CourseMaster</span>
         </div>
 
-        <div class="footer-status">
-            <div class="stat-item">
-                <span class="stat-label">Model</span>
-                <span class="stat-value">GPT-4o / DeepSeek</span>
+        <div class="section-title">教学管理</div>
+        <div class="menu-item">
+            <i class="fa-regular fa-folder-open"></i> 课程概览
+        </div>
+        <div class="menu-item">
+            <i class="fa-solid fa-chart-pie"></i> 学情分析
+        </div>
+        
+        <div class="section-title">教研工具</div>
+        <div class="menu-item active">
+            <i class="fa-solid fa-robot"></i> 智能助教 (AI)
+        </div>
+        <div class="menu-item">
+            <i class="fa-solid fa-book"></i> 教案生成
+        </div>
+
+        <div style="margin-top: auto;">
+            <div class="menu-item">
+                <i class="fa-solid fa-gear"></i> 系统设置
             </div>
-            <div class="stat-item">
-                <span class="stat-label">Latency</span>
-                <span class="stat-value">24ms</span>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-bar">
+            <div class="page-title">《设计你喜爱的课程》教研控制台</div>
+            <div class="user-profile">
+                <span style="font-size: 12px; color: #94a3b8;">教师科研版 v2.1</span>
+                <div class="avatar">T</div>
             </div>
-            <div class="stat-item">
-                <span class="stat-label">Database</span>
-                <span class="stat-value">Connected</span>
+        </header>
+
+        <div class="hero-section">
+            <div class="hero-title">Welcome, Professor</div>
+            <p class="hero-subtitle">系统已就绪，点击下方按钮唤醒智能体</p>
+
+            <div class="launch-card" onclick="openAI()">
+                <div class="launch-icon">
+                    <i class="fa-solid fa-fingerprint"></i>
+                </div>
+                <div style="font-size: 18px; font-weight: 600;">启动 AI 教研顾问</div>
+                <div style="font-size: 12px; color: #94a3b8; margin-top: 5px;">Status: Online | Low Latency</div>
             </div>
         </div>
     </main>
@@ -218,53 +242,68 @@
     <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.19/libs/cn/index.js"></script>
     <script>
         const client = new CozeWebSDK.WebChatClient({
+            /* 1. config 配置：指定 Bot ID */
             config: {
-                /* ========================================================== */
-                /*7594087273495855119*/
-                /* ========================================================== */
-                bot_id: '7594087273495855119', 
+                type: 'bot',
+                bot_id: '7594087273495855119', //
+                isIframe: false,
             },
-            componentProps: {
-                /* 这里是关键：把界面伪装成定制软件 */
-                title: '课程专家助手 (科研版)',  // 顶部标题
-                width: 800,  // 宽度调大，像电脑软件，而不是手机气泡
-                layout: 'pc', // 强制使用 PC 模式，会居中显示，而不是贴边
-                icon: 'https://img.icons8.com/color/48/artificial-intelligence.png', // 定制一个 AI 图标（可选）
-            },
-            ui: {
-                /* 尝试微调一些基础样式 */
-                base: {
-                    zIndex: 1000,
-                },
-                chatBot: {
-                    title: "《设计你喜爱的课程》智能教研",
-                    uploadable: true, // 允许老师上传文件让 AI 分析
-                    width: 800, 
-                }
-            },
+            
+            /* 2. auth 配置：这里我帮你填入了正确的永久 Token */
             auth: {
                 type: 'token',
-                /* ========================================================== */
-                /*pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan*/
-                /* ========================================================== */
-                token: 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan', 
-                onRefreshToken: function () {
-                    return 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
-                }
-            }
+                // 这是你之前生成的永久 pat_ Token
+                token: 'pat_tqgLSbvx8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan', 
+                onRefreshToken: async () => 'pat_tqgLSbvx8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
+            },
+            
+            /* 3. userInfo 配置：让它在后台显示自定义的用户身份 */
+            userInfo: {
+                id: 'professor_01',
+                url: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png', // 这是一个教授头像
+                nickname: 'Professor',
+            },
+            
+            /* 4. ui 配置：这里是“视觉风格”的关键 */
+            ui: {
+                base: {
+                    /* 这里使用了 3D 机器人图标，配合你的深色背景，而不是默认图标 */
+                    icon: 'https://cdn-icons-png.flaticon.com/512/4712/4712009.png',
+                    /* layout 设为 'mobile'，这样右下角会有一个悬浮球，符合你的要求 */
+                    layout: 'mobile', 
+                    lang: 'zh-CN',
+                    zIndex: 2000
+                },
+                header: {
+                    isShow: true,
+                    isNeedClose: true,
+                    title: 'CourseMaster 智能教研' // 自定义标题
+                },
+                asstBtn: {
+                    isNeed: true // 开启右下角悬浮球
+                },
+                footer: {
+                    isShow: false, // 隐藏版权信息，显得像自研系统
+                },
+                chatBot: {
+                    title: '专属教研顾问',
+                    uploadable: true,
+                    width: 400,
+                },
+            },
         });
 
-        // 核心逻辑：点击按钮唤起 Coze
+        // 核心逻辑：点击中间大按钮，自动点击右下角的悬浮球
         function openAI() {
-            // 找到 Coze 的按钮并点击
             const btns = document.getElementsByClassName('coze-web-chat-btn');
             if(btns.length > 0) {
                 btns[0].click();
             } else {
-                // 如果网速慢还没加载出来，提示一下
                 alert("正在建立安全连接，请稍后...");
             }
         }
     </script>
+</body>
+</html>
 
 
