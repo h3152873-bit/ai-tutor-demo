@@ -2,278 +2,377 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CourseMaster AI Control Center</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>AI 聚合对话 - 极简黑白</title>
     <style>
-        /* ================= 全局黑白灰定义 ================= */
+        /* --- 全局黑白灰风格 --- */
         :root {
-            --bg-color: #F8F9FA;      /* 极浅灰背景 */
-            --card-bg: #FFFFFF;       /* 纯白卡片背景 */
-            --text-black: #111111;    /* 近乎纯黑的文字 */
-            --text-grey: #666666;     /* 次要文字灰色 */
-            --text-light-grey: #999999; /* 辅助信息灰色 */
-            --border-color: #E5E5E5;  /* 浅灰边框线 */
-            --orbit-line: #CCCCCC;    /* 轨道线颜色 */
-            --btn-black: #000000;     /* 按钮黑色 */
+            --bg-color: #0a0a0a;
+            --text-color: #e0e0e0;
+            --accent-color: #ffffff;
+            --panel-bg: rgba(20, 20, 20, 0.95);
+            --border-color: #333;
         }
 
         body {
-            margin: 0; padding: 0;
-            font-family: 'Inter', -apple-system, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-black);
+            margin: 0;
             height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Courier New', Courier, monospace; /* 极客风字体 */
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+        }
+
+        /* --- 旋转菜单区域 --- */
+        .orbit-container {
             position: relative;
-        }
-
-        /* ================= 轨道系统容器 ================= */
-        .orbit-system {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 800px; height: 800px;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        /* 轨道路径线 */
-        .orbit-path {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            border: 1px dashed var(--orbit-line);
-            border-radius: 50%;
-            opacity: 0.5;
-        }
-        .path-1 { width: 380px; height: 380px; } /* 内圈 */
-        .path-2 { width: 540px; height: 540px; } /* 中圈 */
-        .path-3 { width: 700px; height: 700px; } /* 外圈 */
-
-        /* 轨道旋转容器 */
-        .orbit-rotator {
-            position: absolute;
-            top: 50%; left: 50%;
-            border-radius: 50%;
-            animation: orbit-spin linear infinite;
-        }
-        .rotator-1 { width: 380px; height: 380px; margin: -190px; animation-duration: 20s; }
-        .rotator-2 { width: 540px; height: 540px; margin: -270px; animation-duration: 35s; animation-direction: reverse; }
-        .rotator-3 { width: 700px; height: 700px; margin: -350px; animation-duration: 50s; }
-
-        /* 图标反向自转容器 */
-        .satellite-wrapper {
-            position: absolute;
-            top: 0; left: 50%;
-            transform: translate(-50%, -50%);
-            animation: counter-spin linear infinite;
-        }
-        .rotator-1 .satellite-wrapper { animation-duration: 20s; }
-        .rotator-2 .satellite-wrapper { animation-duration: 35s; animation-direction: reverse; }
-        .rotator-3 .satellite-wrapper { animation-duration: 50s; }
-
-        /* 卫星图标样式 */
-        .satellite-icon {
-            width: 56px; height: 56px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            padding: 10px; /* 稍微增加内边距，让 Coze 图标呼吸感更好 */
-        }
-        /* 🔴 核心美化代码：强制所有图标变黑白 */
-        .satellite-icon img {
-            width: 100%; height: 100%; object-fit: contain;
-            filter: grayscale(100%); /* 默认黑白 */
-            opacity: 0.8;
-            transition: 0.3s;
-        }
-        /* 鼠标悬停时恢复彩色并高亮 */
-        .satellite-icon:hover img {
-            filter: grayscale(0%); /* 恢复彩色 */
-            opacity: 1;
-            transform: scale(1.1);
-        }
-
-        @keyframes orbit-spin { 100% { transform: rotate(360deg); } }
-        @keyframes counter-spin { 100% { transform: rotate(-360deg); } }
-
-        /* ================= 中心主卡片 ================= */
-        .main-card {
-            position: relative;
-            z-index: 10;
-            background: var(--card-bg);
-            width: 420px;
-            padding: 48px 40px;
-            border-radius: 32px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
-            border: 1px solid var(--border-color);
-        }
-
-        .subtitle {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-light-grey);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 16px;
-        }
-
-        h1 {
-            font-size: 40px;
-            font-weight: 900;
-            margin: 0 0 40px 0;
-            line-height: 1.1;
-            letter-spacing: -1px;
-        }
-
-        /* 核心启动按钮 */
-        .start-btn {
-            background: var(--btn-black);
-            color: white;
-            border: none;
-            padding: 20px 48px;
-            border-radius: 100px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-            transition: all 0.2s;
-            display: inline-flex;
+            width: 400px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 50px;
+            transition: opacity 0.5s ease;
         }
-        .start-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
-        .start-btn:active { transform: scale(0.98); background: #333; }
 
-        /* 底部三个介绍特性 */
-        .features-container {
+        /* 中心的文本 */
+        .center-text {
+            position: absolute;
+            text-align: center;
+            z-index: 10;
+        }
+        .center-text h1 {
+            font-size: 24px;
+            letter-spacing: 4px;
+            margin: 0;
+            color: var(--accent-color);
+        }
+        .center-text p {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* 旋转轨道 */
+        .orbit-ring {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border: 1px dashed #333;
+            border-radius: 50%;
+            animation: rotate 20s linear infinite;
+        }
+        
+        /* 鼠标放上去暂停旋转，方便点击 */
+        .orbit-container:hover .orbit-ring {
+            animation-play-state: paused;
+        }
+
+        /* 小球 (图标) */
+        。planet {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: #000;
+            border: 1px solid #444;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            font-size: 10px;
+            color: white;
+            text-align: center;
+        }
+
+        .planet:hover {
+            background: #fff;
+            color: #000;
+            transform: scale(1.2);
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        /* 计算小球位置 (三角函数布局) */
+        /* 12点钟方向 */
+        .planet:nth-child(1) { top: -30px; left: 120px; } 
+        /* 4点钟方向 */
+        .planet:nth-child(2) { top: 200px; left: 250px; }
+        /* 8点钟方向 */
+        .planet:nth-child(3) { top: 200px; left: -10px; }
+
+        /* 防止图标跟着轨道旋转而倒立，给图标加反向旋转动画 */
+        .planet span {
+            animation: counter-rotate 20s linear infinite;
+        }
+        .orbit-container:hover .planet span {
+            animation-play-state: paused;
+        }
+
+        @keyframes rotate { 100% { transform: rotate(360deg); } }
+        @keyframes counter-rotate { 100% { transform: rotate(-360deg); } }
+
+        /* --- 自定义聊天框 (初始隐藏) --- */
+        .chat-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 800px;
+            height: 600px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .chat-modal.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: all;
+        }
+
+        /* 聊天框头部 */
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
-            border-top: 1px solid var(--border-color);
-            padding-top: 32px;
+            align-items: center;
         }
-        .feature-item {
+        .chat-title {
+            font-weight: bold;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .close-btn:hover { color: #fff; }
+
+        /* 消息展示区 */
+        .chat-messages {
             flex: 1;
-            text-align: center;
-            padding: 0 10px;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
-        .feature-icon {
-            font-size: 20px; color: var(--text-black); margin-bottom: 12px;
+        
+        /* 消息气泡 */
+        .message {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            line-height: 1.5;
         }
-        .feature-title {
-            font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--text-black);
+        .message.user {
+            align-self: flex-end;
+            background: #333;
+            color: #fff;
+            border-bottom-right-radius: 0;
         }
-        .feature-desc {
-            font-size: 11px; color: var(--text-grey); line-height: 1.4;
+        .message.bot {
+            align-self: flex-start;
+            background: transparent;
+            border: 1px solid #333;
+            color: #ccc;
+            border-top-left-radius: 0;
         }
 
-        /* 隐藏官方按钮 */
-        .coze-web-chat-btn { opacity: 0 !important; pointer-events: none; }
+        /* 输入区域 */
+        .chat-input-area {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+        }
+        
+        input[type="text"] {
+            flex: 1;
+            background: #000;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 12px;
+            outline: none;
+            font-family: inherit;
+        }
+        input[type="text"]:focus {
+            border-color: #666;
+        }
+        
+        button.send-btn {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 0 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+        button.send-btn:hover {
+            opacity: 0.8;
+        }
+        
+        /* 加载动画 */
+        .typing-indicator { font-size: 12px; color: #666; margin-left: 10px; display: none;}
     </style>
 </head>
 <body>
 
-    <div class="orbit-system">
-        <div class="orbit-path path-1"></div>
-        <div class="orbit-path path-2"></div>
-        <div class="orbit-path path-3"></div>
-
-        <div class="orbit-rotator rotator-1">
-            <div class="satellite-wrapper">
-                <div class="satellite-icon" title="DeepSeek 内核">
-                    <img src="https://via.placeholder.com/50x50?text=DS" alt="DeepSeek">
-                </div>
-            </div>
+    <div class="orbit-container" id="orbitMenu">
+        <div class="center-text">
+            <h1>AGI NEXUS</h1>
+            <p>SELECT YOUR INTELLIGENCE</p>
         </div>
 
-        <div class="orbit-rotator rotator-2">
-            <div class="satellite-wrapper">
-                <div class="satellite-icon" title="OpenAI 模型">
-                     <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="OpenAI">
-                </div>
+        <div class="orbit-ring">
+            <div class="planet" onclick="openChat('DeepSeek', 'bot_id_1')">
+                <span>DeepSeek</span>
             </div>
-        </div>
-
-        <div class="orbit-rotator rotator-3">
-            <div class="satellite-wrapper">
-                <div class="satellite-icon" title="Coze 官方浮窗">
-                    <img src="https://sf16-sg.tiktokcdn.com/obj/eden-sg/rkpatz_lg_ld/ljhwZthlaukjlkulzlp/icon.png" alt="Coze Logo">
-                </div>
+            <div class="planet" onclick="openChat('OpenAI', 'bot_id_2')">
+                <span>OpenAI</span>
+            </div>
+            <div class="planet" onclick="openChat('Doubao', 'bot_id_3')">
+                <span>Doubao</span>
             </div>
         </div>
     </div>
 
-    <div class="main-card">
-        <div class="subtitle">AI-Powered Research HUB</div>
-        <h1>CourseMaster<br>智能中台</h1>
+    <div class="chat-modal" id="chatModal">
+        <div class="chat-header">
+            <span class="chat-title" id="currentBotName">AI ASSISTANT</span>
+            <button class="close-btn" onclick="closeChat()">×</button>
+        </div>
+        
+        <div class="chat-messages" id="messageList">
+            <div class="message bot">你好，我是智能体。请问有什么可以帮你？</div>
+        </div>
+        <div class="typing-indicator" id="typing">Thinking...</div>
 
-        <button class="start-btn" onclick="openChat()">
-            <span>启动教研顾问</span>
-            <i class="fa-solid fa-arrow-right-long"></i>
-        </button>
-
-        <div class="features-container">
-            <div class="feature-item">
-                <div class="feature-icon"><i class="fa-solid fa-brain"></i></div>
-                <div class="feature-title">深度思维模型</div>
-                <div class="feature-desc">基于核心方法论构建</div>
-            </div>
-            <div class="feature-item" style="border-left: 1px solid #eee; border-right: 1px solid #eee;">
-                <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
-                <div class="feature-title">实时响应</div>
-                <div class="feature-desc">毫秒级极速反馈</div>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon"><i class="fa-solid fa-database"></i></div>
-                <div class="feature-title">专家知识库</div>
-                <div class="feature-desc">教育部标准数据校验</div>
-            </div>
+        <div class="chat-input-area">
+            <input type="text" id="userInput" placeholder="输入你的问题..." onkeypress="handleEnter(event)">
+            <button class="send-btn" onclick="sendMessage()">SEND</button>
         </div>
     </div>
 
-    <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.20/libs/cn/index.js"></script>
     <script>
-      new CozeWebSDK.WebChatClient({
-        config: {
-          bot_id: '7594087273495855119', 
-        },
-        componentProps: {
-          title: 'CourseMaster AI',
-        },
-        auth: {
-          type: 'token',
-          token: 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan', 
-          onRefreshToken: function () {
-            return 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
-          }
-        },
-        ui: {
-            base: { layout: 'mobile', zIndex: 2000 },
-            asstBtn: { isNeed: true },
-            footer: { isShow: false }
-        }
-      });
+        // --- 逻辑控制 ---
+        
+        // 你的 Coze PAT (Personal Access Token)
+        // 注意：实际项目中不要把 Key 直接放在前端代码里，容易泄露。这里仅做演示。
+        const COZE_API_TOKEN = 'YOUR_COZE_PAT_HERE'; 
+        
+        let currentBotId = ''; // 当前选中的 Bot ID
 
-      function openChat() {
-          const btns = document.getElementsByClassName('coze-web-chat-btn');
-          if (btns.length > 0) {
-              btns[0].click();
-          } else {
-              setTimeout(() => {
-                 const retry = document.getElementsByClassName('coze-web-chat-btn');
-                 if(retry.length > 0) retry[0].click();
-              }, 300);
-          }
-      }
+        // 打开聊天框
+        function openChat(botName, botId) {
+            // 1. 设置当前聊天的标题和ID
+            document.getElementById('currentBotName').innerText = botName + " / MODEL";
+            currentBotId = botId;
+
+            // 2. 隐藏菜单，显示聊天框
+            document.getElementById('orbitMenu').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('orbitMenu').style.display = 'none';
+                document.getElementById('chatModal').classList.add('active');
+            }, 500);
+
+            // 3. (可选) 这里可以清空之前的聊天记录
+            // document.getElementById('messageList').innerHTML = '';
+        }
+
+        // 关闭聊天框
+        function closeChat() {
+            document.getElementById('chatModal').classList.remove('active');
+            setTimeout(() => {
+                document.getElementById('orbitMenu').style.display = 'flex';
+                document.getElementById('orbitMenu').style.opacity = '1';
+            }, 500);
+        }
+
+        // 回车发送
+        function handleEnter(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        // 发送消息核心逻辑
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const messageList = document.getElementById('messageList');
+            const typing = document.getElementById('typing');
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            // 1. 显示用户消息
+            addMessage(text, 'user');
+            input.value = '';
+            typing.style.display = 'block';
+
+            // 2. 调用 Coze API (演示非流式调用，简单易懂)
+            // 真实场景建议用流式 (Streaming) 获得打字机效果
+            try {
+                // 模拟 API 调用延迟 (因为没有真实 Key)
+                // 真正写代码时，用 fetch 替换下面的 setTimeout
+                /*
+                const response = await fetch('https://api.coze.cn/open_api/v2/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${COZE_API_TOKEN}`,
+                        'Content-Type': 'application/json',
+                        'Accept': '*/*'
+                    },
+                    body: JSON.stringify({
+                        "conversation_id": "123", // 可以生成随机ID
+                        "bot_id": currentBotId,
+                        "user": "user_123",
+                        "query": text,
+                        "stream": false
+                    })
+                });
+                const data = await response.json();
+                const botReply = data.messages[0].content; // 根据实际返回结构调整
+                */
+                
+                // --- 模拟回复 (删除这段，使用上面的 fetch) ---
+                await new Promise(r => setTimeout(r, 1500)); 
+                const botReply = "这是模拟的回复。你需要去 Coze 后台申请 API Key 并在代码中替换 fetch 部分。";
+                // -------------------------------------------
+
+                addMessage(botReply, 'bot');
+
+            } catch (error) {
+                console.error(error);
+                addMessage("连接失败，请检查 API 设置。", 'bot');
+            } finally {
+                typing.style.display = 'none';
+            }
+        }
+
+        function addMessage(text, type) {
+            const div = document.createElement('div');
+            div.className = `message ${type}`;
+            div.innerText = text;
+            document.getElementById('messageList').appendChild(div);
+            // 自动滚动到底部
+            document.getElementById('messageList').scrollTop = document.getElementById('messageList').scrollHeight;
+        }
     </script>
 </body>
 </html>
