@@ -231,13 +231,14 @@
 
       /* 1. 隐藏 SDK 自带的悬浮球 */
       .coze-web-chat-btn {
-        opacity: 0 !important;
-        pointer-events: none !important;
-        width: 1px !important;
-        height: 1px !important;
-        position: fixed !important;
-        bottom: 0 !important;
-        right: 0 !important;
+            opacity: 0 !important;
+            /* 关键：不要禁用 pointer-events（有些版本需要真实指针事件链才会打开） */
+            pointer-events: auto !important;
+            width: 1px !important;
+            height: 1px !important;
+            position: fixed !important;
+            bottom: 0 !important;
+            right: 0 !important;
       }
 
       /* 2. 强制拉伸 SDK 的聊天窗口到全屏 */
@@ -259,6 +260,162 @@
       iframe {
         width: 100% !important;
         height: 100% !important;
+      }
+
+      /* ================= 3. 移动端响应式优化 ================= */
+      @media (max-width: 768px) {
+        /* 轨道系统缩小适配手机 */
+        .orbit-system {
+          width: 100vw;
+          height: 100vw;
+          max-width: 500px;
+          max-height: 500px;
+        }
+
+        .path-1 {
+          width: 200px;
+          height: 200px;
+        }
+        .path-2 {
+          width: 300px;
+          height: 300px;
+        }
+        .path-3 {
+          width: 400px;
+          height: 400px;
+        }
+
+        .rotator-1 {
+          width: 200px;
+          height: 200px;
+          margin: -100px;
+        }
+        .rotator-2 {
+          width: 300px;
+          height: 300px;
+          margin: -150px;
+        }
+        .rotator-3 {
+          width: 400px;
+          height: 400px;
+          margin: -200px;
+        }
+
+        /* 卫星图标缩小 */
+        .satellite-icon {
+          width: 40px;
+          height: 40px;
+          padding: 8px;
+        }
+
+        /* 主卡片优化 */
+        .main-card {
+          width: 85%;
+          max-width: none;
+          padding: 30px 20px;
+          border-radius: 24px;
+        }
+
+        /* 标题缩小 */
+        .subtitle {
+          font-size: 10px;
+          letter-spacing: 1.5px;
+          margin-bottom: 8px;
+        }
+
+        h1 {
+          font-size: 28px;
+          margin: 0 0 24px 0;
+        }
+
+        /* 按钮优化 */
+        .start-btn {
+          padding: 16px 32px;
+          font-size: 15px;
+          margin-bottom: 30px;
+        }
+
+        /* 功能项优化 */
+        .features {
+          padding-top: 20px;
+          flex-wrap: wrap;
+        }
+
+        .f-item {
+          padding: 0 8px;
+          margin-bottom: 12px;
+        }
+
+        .f-icon {
+          font-size: 16px;
+          margin-bottom: 6px;
+        }
+
+        .f-title {
+          font-size: 11px;
+        }
+
+        .f-desc {
+          font-size: 9px;
+        }
+      }
+
+      /* 超小屏手机（iPhone SE 等） */
+      @media (max-width: 375px) {
+        .orbit-system {
+          max-width: 90vw;
+          max-height: 90vw;
+        }
+
+        .path-1 {
+          width: 160px;
+          height: 160px;
+        }
+        .path-2 {
+          width: 240px;
+          height: 240px;
+        }
+        .path-3 {
+          width: 320px;
+          height: 320px;
+        }
+
+        .rotator-1 {
+          width: 160px;
+          height: 160px;
+          margin: -80px;
+        }
+        .rotator-2 {
+          width: 240px;
+          height: 240px;
+          margin: -120px;
+        }
+        .rotator-3 {
+          width: 320px;
+          height: 320px;
+          margin: -160px;
+        }
+
+        .satellite-icon {
+          width: 36px;
+          height: 36px;
+          padding: 6px;
+        }
+
+        .main-card {
+          width: 90%;
+          padding: 24px 16px;
+        }
+
+        h1 {
+          font-size: 24px;
+          margin: 0 0 20px 0;
+        }
+
+        .start-btn {
+          padding: 14px 28px;
+          font-size: 14px;
+        }
       }
     </style>
   </head>
@@ -322,7 +479,7 @@
     <script>
       // 重要：不要把 PAT Token 明文写进前端页面（会被任何访问者直接拿走）
       // 这里用占位符，建议你改为由后端接口下发短期 token。
-      const COZE_PAT_TOKEN = "pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan";
+      const COZE_PAT_TOKEN = "REPLACE_ME_WITH_YOUR_TOKEN";
 
       // 常见坑：直接双击用 file:// 打开时，第三方 SDK 可能会因为安全策略导致无法正常弹出/鉴权
       // 这里提前给出更明确的提示，避免“点了没反应”难排查。
@@ -372,6 +529,18 @@
           const el = document.querySelector(sel);
           if (el) return el;
         }
+
+        // 进一步兜底：在所有元素里找“像悬浮球”的 fixed/右下角控件
+        const all = document.querySelectorAll("button, div, a");
+        for (const el of all) {
+          const cls = (el.className || "").toString();
+          if (!cls.toLowerCase().includes("coze")) continue;
+          const style = window.getComputedStyle(el);
+          if (style.position !== "fixed") continue;
+          // 右下角常见：bottom/right 非 auto
+          if (style.right === "auto" || style.bottom === "auto") continue;
+          return el;
+        }
         return null;
       }
 
@@ -379,9 +548,23 @@
         return new Promise((r) => setTimeout(r, ms));
       }
 
+      function simulateTap(el) {
+        // 尽量模拟真实点击链，兼容只监听 pointer 事件的实现
+        const opts = { bubbles: true, cancelable: true, view: window };
+        try {
+          el.dispatchEvent(new PointerEvent("pointerdown", { ...opts, pointerType: "mouse", isPrimary: true }));
+          el.dispatchEvent(new PointerEvent("pointerup", { ...opts, pointerType: "mouse", isPrimary: true }));
+        } catch (_) {
+          // 某些浏览器不支持 PointerEvent，退化到 MouseEvent
+          el.dispatchEvent(new MouseEvent("mousedown", opts));
+          el.dispatchEvent(new MouseEvent("mouseup", opts));
+        }
+        el.dispatchEvent(new MouseEvent("click", opts));
+      }
+
       // 更稳的唤起逻辑：等待 SDK 插入按钮 → 点击；并给出明确的失败原因
       async function openChat() {
-        if (COZE_PAT_TOKEN === "REPLACE_ME_WITH_YOUR_TOKEN") {
+        if (COZE_PAT_TOKEN === "pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan") {
           alert("请先在 index.html 里把 COZE_PAT_TOKEN 替换成你的 Token，再试一次。");
           return;
         }
@@ -411,7 +594,8 @@
         }
 
         try {
-          btn.click();
+          // 用“模拟手动点悬浮球”的方式打开
+          simulateTap(btn);
         } catch (e) {
           console.error("[Coze] click 失败", e);
           alert("唤起失败：按钮 click 报错。请打开控制台查看错误信息。");
@@ -420,7 +604,6 @@
     </script>
   </body>
 </html>
-
 
 
 
