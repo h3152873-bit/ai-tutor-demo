@@ -324,6 +324,12 @@
       // 这里用占位符，建议你改为由后端接口下发短期 token。
       const COZE_PAT_TOKEN = "pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan";
 
+      // 常见坑：直接双击用 file:// 打开时，第三方 SDK 可能会因为安全策略导致无法正常弹出/鉴权
+      // 这里提前给出更明确的提示，避免“点了没反应”难排查。
+      if (location.protocol === "file:") {
+        console.warn("[Coze] 建议用 http:// 方式打开页面（不要 file:// 直接打开）。");
+      }
+
       // 初始化 SDK
       // 注意：这里我们不指定 el，让它自己弹，但我们用 CSS 把它“撑”到全屏
       const client = new CozeWebSDK.WebChatClient({
@@ -352,24 +358,70 @@
         },
       });
 
-      // 暴力点击逻辑
-      function openChat() {
-        const btns = document.getElementsByClassName("coze-web-chat-btn");
-        if (btns.length > 0) {
-          btns[0].click();
+      function findCozeLauncherButton() {
+        // SDK 的按钮 class 在不同版本/语言包里可能会变化，所以多做几种兜底匹配
+        const selectors = [
+          ".coze-web-chat-btn",
+          "[class*='coze-web-chat-btn']",
+          "[class*='coze-web-chat'] button",
+          "button[class*='coze']",
+          "[role='button'][class*='coze']",
+        ];
+
+        for (const sel of selectors) {
+          const el = document.querySelector(sel);
+          if (el) return el;
+        }
+        return null;
+      }
+
+      function sleep(ms) {
+        return new Promise((r) => setTimeout(r, ms));
+      }
+
+      // 更稳的唤起逻辑：等待 SDK 插入按钮 → 点击；并给出明确的失败原因
+      async function openChat() {
+        if (COZE_PAT_TOKEN === "REPLACE_ME_WITH_YOUR_TOKEN") {
+          alert("请先在 index.html 里把 COZE_PAT_TOKEN 替换成你的 Token，再试一次。");
           return;
         }
 
-        // 容错：如果还没加载出来，稍微等一下
-        setTimeout(() => {
-          const retryBtns = document.getElementsByClassName("coze-web-chat-btn");
-          if (retryBtns.length > 0) retryBtns[0].click();
-          else alert("系统初始化中...请稍后再试");
-        }, 500);
+        if (location.protocol === "file:") {
+          alert("检测到你是用 file:// 方式打开。\n建议用本地 http:// 服务打开，否则 SDK 可能无法正常弹出。\n（我已在项目里提供 serve.ps1，可直接启动）");
+          // 仍然继续尝试
+        }
+
+        // 最多等 5 秒让 SDK 把按钮插进 DOM
+        const deadline = Date.now() + 5000;
+        let btn = findCozeLauncherButton();
+        while (!btn && Date.now() < deadline) {
+          await sleep(200);
+          btn = findCozeLauncherButton();
+        }
+
+        if (!btn) {
+          alert(
+            "未找到 Coze 悬浮按钮元素，可能原因：\n" +
+              "1) SDK 脚本未加载成功（网络/被拦截）\n" +
+              "2) SDK 更新导致按钮 class 变化\n" +
+              "3) 需要用 http:// 打开页面（不要 file://）\n\n" +
+              "建议：打开浏览器控制台查看是否有 Coze/Network 报错。"
+          );
+          return;
+        }
+
+        try {
+          btn.click();
+        } catch (e) {
+          console.error("[Coze] click 失败", e);
+          alert("唤起失败：按钮 click 报错。请打开控制台查看错误信息。");
+        }
       }
     </script>
   </body>
 </html>
+
+
 
 
 
