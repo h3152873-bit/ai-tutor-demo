@@ -322,7 +322,7 @@
     <script>
       // 重要：不要把 PAT Token 明文写进前端页面（会被任何访问者直接拿走）
       // 这里用占位符，建议你改为由后端接口下发短期 token。
-      const COZE_PAT_TOKEN = "REPLACE_ME_WITH_YOUR_TOKEN";
+      const COZE_PAT_TOKEN = "pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan";
 
       // 初始化 SDK
       // 注意：这里我们不指定 el，让它自己弹，但我们用 CSS 把它“撑”到全屏
@@ -335,7 +335,7 @@
         },
         auth: {
           type: "token",
-          token: pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan
+          token: COZE_PAT_TOKEN,
           onRefreshToken: function () {
             return COZE_PAT_TOKEN;
           },
@@ -370,6 +370,7 @@
     </script>
   </body>
 </html>
+
 
 
 
