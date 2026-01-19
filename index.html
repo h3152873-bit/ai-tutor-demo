@@ -28,21 +28,21 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden; /* 防止滚动 */
+            overflow: hidden;
             position: relative;
         }
 
-        /* ================= 轨道系统容器 (位于最底层) ================= */
+        /* ================= 轨道系统容器 ================= */
         .orbit-system {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             width: 800px; height: 800px;
             z-index: 0;
-            pointer-events: none; /* 让鼠标能穿透轨道点到中间的卡片 */
+            pointer-events: none;
         }
 
-        /* 轨道路径线 (虚线圆圈) */
+        /* 轨道路径线 */
         .orbit-path {
             position: absolute;
             top: 50%; left: 50%;
@@ -55,25 +55,22 @@
         .path-2 { width: 540px; height: 540px; } /* 中圈 */
         .path-3 { width: 700px; height: 700px; } /* 外圈 */
 
-        /* 轨道旋转容器 (带动图标公转) */
+        /* 轨道旋转容器 */
         .orbit-rotator {
             position: absolute;
             top: 50%; left: 50%;
             border-radius: 50%;
-            /* 动画：顺时针无限旋转 */
             animation: orbit-spin linear infinite;
         }
-        /* 设置不同轨道的大小和速度 */
         .rotator-1 { width: 380px; height: 380px; margin: -190px; animation-duration: 20s; }
-        .rotator-2 { width: 540px; height: 540px; margin: -270px; animation-duration: 35s; animation-direction: reverse; /* 中圈反向转更酷 */ }
+        .rotator-2 { width: 540px; height: 540px; margin: -270px; animation-duration: 35s; animation-direction: reverse; }
         .rotator-3 { width: 700px; height: 700px; margin: -350px; animation-duration: 50s; }
 
-        /* 图标包裹器 (位于旋转容器边缘，并反向自转以保持正立) */
+        /* 图标反向自转容器 */
         .satellite-wrapper {
             position: absolute;
             top: 0; left: 50%;
             transform: translate(-50%, -50%);
-            /* 动画：逆时针无限自转，抵消公转 */
             animation: counter-spin linear infinite;
         }
         .rotator-1 .satellite-wrapper { animation-duration: 20s; }
@@ -88,15 +85,26 @@
             border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            padding: 8px;
+            padding: 10px; /* 稍微增加内边距，让 Coze 图标呼吸感更好 */
         }
-        .satellite-icon img { width: 100%; height: 100%; object-fit: contain; filter: grayscale(100%); /* 让彩色Logo变成高级黑白 */ transition: 0.3s; }
-        .satellite-icon:hover img { filter: grayscale(0%); transform: scale(1.1); /* 鼠标悬停变彩色 */ }
+        /* 🔴 核心美化代码：强制所有图标变黑白 */
+        .satellite-icon img {
+            width: 100%; height: 100%; object-fit: contain;
+            filter: grayscale(100%); /* 默认黑白 */
+            opacity: 0.8;
+            transition: 0.3s;
+        }
+        /* 鼠标悬停时恢复彩色并高亮 */
+        .satellite-icon:hover img {
+            filter: grayscale(0%); /* 恢复彩色 */
+            opacity: 1;
+            transform: scale(1.1);
+        }
 
         @keyframes orbit-spin { 100% { transform: rotate(360deg); } }
         @keyframes counter-spin { 100% { transform: rotate(-360deg); } }
 
-        /* ================= 中心主卡片 (位于顶层) ================= */
+        /* ================= 中心主卡片 ================= */
         .main-card {
             position: relative;
             z-index: 10;
@@ -181,7 +189,7 @@
 
         <div class="orbit-rotator rotator-1">
             <div class="satellite-wrapper">
-                <div class="satellite-icon" title="DeepSeek">
+                <div class="satellite-icon" title="DeepSeek 内核">
                     <img src="https://via.placeholder.com/50x50?text=DS" alt="DeepSeek">
                 </div>
             </div>
@@ -189,7 +197,7 @@
 
         <div class="orbit-rotator rotator-2">
             <div class="satellite-wrapper">
-                <div class="satellite-icon" title="OpenAI">
+                <div class="satellite-icon" title="OpenAI 模型">
                      <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="OpenAI">
                 </div>
             </div>
@@ -197,8 +205,8 @@
 
         <div class="orbit-rotator rotator-3">
             <div class="satellite-wrapper">
-                <div class="satellite-icon" title="豆包 Doubao">
-                    <img src="https://via.placeholder.com/50x50?text=DB" alt="Doubao">
+                <div class="satellite-icon" title="Coze 官方浮窗">
+                    <img src="https://sf16-sg.tiktokcdn.com/obj/eden-sg/rkpatz_lg_ld/ljhwZthlaukjlkulzlp/icon.png" alt="Coze Logo">
                 </div>
             </div>
         </div>
