@@ -1,37 +1,211 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>最终连通性测试</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>CourseMaster AI Control Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ================= 全局样式 ================= */
+        :root {
+            --bg-color: #F8F9FA; --card-bg: #FFFFFF; --text-black: #111111;
+            --text-grey: #666666; --border-color: #E5E5E5; --orbit-line: #DDDDDD;
+            --btn-black: #000000;
+        }
+
+        body {
+            margin: 0; padding: 0; font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color); color: var(--text-black);
+            height: 100vh; overflow: hidden; /* 禁止滚动 */
+        }
+
+        /* ================= 1. 落地页视图 (Landing View) ================= */
+        #landing-view {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10;
+            background-color: var(--bg-color);
+            transition: opacity 0.5s ease; /* 切换时的淡出效果 */
+        }
+
+        /* 轨道动画系统 (保留你喜欢的酷炫效果) */
+        .orbit-system {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px; height: 800px; z-index: 0; pointer-events: none;
+        }
+        .orbit-path {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            border: 1px dashed var(--orbit-line); border-radius: 50%; opacity: 0.6;
+        }
+        .path-1 { width: 340px; height: 340px; } .path-2 { width: 500px; height: 500px; } .path-3 { width: 660px; height: 660px; }
+        
+        .orbit-rotator { position: absolute; top: 50%; left: 50%; border-radius: 50%; animation: orbit-spin linear infinite; }
+        .rotator-1 { width: 340px; height: 340px; margin: -170px; animation-duration: 25s; }
+        .rotator-2 { width: 500px; height: 500px; margin: -250px; animation-duration: 40s; animation-direction: reverse; }
+        .rotator-3 { width: 660px; height: 660px; margin: -330px; animation-duration: 60s; }
+        
+        .satellite-wrapper { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); animation: counter-spin linear infinite; }
+        .rotator-1 .satellite-wrapper { animation-duration: 25s; } .rotator-2 .satellite-wrapper { animation-duration: 40s; animation-direction: reverse; } .rotator-3 .satellite-wrapper { animation-duration: 60s; }
+        
+        .satellite-icon {
+            width: 52px; height: 52px; background: #fff;
+            border: 1px solid var(--border-color); border-radius: 50%;
+            padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex; justify-content: center; align-items: center;
+        }
+        .satellite-icon img { width: 100%; height: 100%; object-fit: contain; filter: grayscale(100%); opacity: 0.7; transition: 0.3s; }
+        .satellite-icon:hover img { filter: grayscale(0%); opacity: 1; transform: scale(1.1); }
+
+        @keyframes orbit-spin { 100% { transform: rotate(360deg); } }
+        @keyframes counter-spin { 100% { transform: rotate(-360deg); } }
+
+        /* 中心卡片 */
+        .main-card {
+            position: relative; z-index: 10;
+            background: rgba(255,255,255,0.9); backdrop-filter: blur(20px);
+            width: 90%; max-width: 400px; padding: 40px 30px;
+            border-radius: 30px; text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08); border: 1px solid rgba(0,0,0,0.05);
+        }
+        .subtitle { font-size: 12px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+        h1 {
+            font-size: 36px; font-weight: 900; margin: 0 0 30px 0; line-height: 1.1; letter-spacing: -1px;
+            background: linear-gradient(135deg, #000 0%, #555 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* 启动按钮 */
+        .start-btn {
+            background: var(--btn-black); color: white; border: none;
+            padding: 18px 40px; border-radius: 100px; font-size: 16px; font-weight: 600;
+            cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: transform 0.2s; display: inline-flex; align-items: center; gap: 10px;
+            margin-bottom: 40px;
+        }
+        .start-btn:active { transform: scale(0.95); }
+
+        .features { display: flex; justify-content: space-between; border-top: 1px solid #eee; padding-top: 25px; }
+        .f-item { flex: 1; padding: 0 5px; }
+        .f-icon { font-size: 18px; margin-bottom: 8px; color: #333; }
+        .f-title { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+        .f-desc { font-size: 10px; color: #888; line-height: 1.4; }
+
+        /* ================= 2. 聊天视图 (Chat View) ================= */
+        /* 这个 div 平时隐藏，点击按钮后显示，并且把 SDK 塞在这个里面 */
+        #chat-view {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff;
+            z-index: 100; /* 比主页高，盖住主页 */
+            display: none; /* 默认隐藏 */
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* 自定义关闭/返回按钮 (在聊天界面左上角) */
+        .back-btn {
+            position: absolute; top: 15px; left: 15px;
+            width: 40px; height: 40px;
+            background: rgba(0,0,0,0.05); border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 101; cursor: pointer; color: #333; font-size: 18px;
+        }
+    </style>
 </head>
 <body>
-    <h2 style="text-align:center; margin-top: 50px;">正在强制连接 Coze...</h2>
-    <p style="text-align:center;">如果右下角没有蓝色图标，请检查 Coze 后台配置。</p>
+
+    <div id="landing-view">
+        <div class="orbit-system">
+            <div class="orbit-path path-1"></div>
+            <div class="orbit-path path-2"></div>
+            <div class="orbit-path path-3"></div>
+            <div class="orbit-rotator rotator-1"><div class="satellite-wrapper"><div class="satellite-icon"><img src="https://via.placeholder.com/60?text=DS" alt="DS"></div></div></div>
+            <div class="orbit-rotator rotator-2"><div class="satellite-wrapper"><div class="satellite-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="OpenAI"></div></div></div>
+            <div class="orbit-rotator rotator-3"><div class="satellite-wrapper"><div class="satellite-icon"><img src="https://sf16-sg.tiktokcdn.com/obj/eden-sg/rkpatz_lg_ld/ljhwZthlaukjlkulzlp/icon.png" alt="Coze"></div></div></div>
+        </div>
+
+        <div class="main-card">
+            <div class="subtitle">CourseMaster AI</div>
+            <h1>智能教研<br>中枢系统</h1>
+            
+            <button class="start-btn" onclick="enterChat()">
+                <span>启动顾问</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+            <div class="features">
+                <div class="f-item"><div class="f-icon"><i class="fa-solid fa-brain"></i></div><div class="f-title">深度思维</div><div class="f-desc">方法论模型</div></div>
+                <div class="f-item" style="border-left:1px solid #f0f0f0; border-right:1px solid #f0f0f0;"><div class="f-icon"><i class="fa-solid fa-bolt"></i></div><div class="f-title">实时响应</div><div class="f-desc">毫秒级反馈</div></div>
+                <div class="f-item"><div class="f-icon"><i class="fa-solid fa-database"></i></div><div class="f-title">知识库</div><div class="f-desc">教育部标准</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="chat-view">
+        <div class="back-btn" onclick="exitChat()"><i class="fa-solid fa-xmark"></i></div>
+        <div id="coze-chat-container" style="width: 100%; height: 100%;"></div>
+    </div>
 
     <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.20/libs/cn/index.js"></script>
     <script>
-        try {
-            new CozeWebSDK.WebChatClient({
-                config: {
-                    bot_id: '7594087273495855119',
-                },
-                componentProps: {
-                    title: '测试连接',
-                },
-                auth: {
-                    type: 'token',
-                    /* 你刚才提供的 Token */
-                    token: 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan',
-                    onRefreshToken: function () {
-                        return 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEii46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
-                    }
-                }
-            });
-            console.log("SDK 初始化代码已执行");
-        } catch (e) {
-            alert("SDK 初始化失败：" + e.message);
+      // 初始化 SDK
+      const cozeClient = new CozeWebSDK.WebChatClient({
+        config: {
+          bot_id: '7594087273495855119', 
+        },
+        componentProps: {
+          title: 'CourseMaster AI',
+        },
+        auth: {
+          type: 'token',
+          token: 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan', 
+          onRefreshToken: function () {
+            return 'pat_tqgLSbvxb8ezU1SyT0OWgP9xDYZAEIi46turMB2fGGE1KvUD6ZHYB5Bj5Euf8Wan'
+          }
+        },
+        ui: {
+            /* 🔴 关键设置：内嵌模式 */
+            base: {
+                layout: 'pc', /* 强制使用 PC 布局以适应容器 */
+                zIndex: 1000,
+            },
+            /* 🔴 告诉 SDK：别弹窗了，直接长在 #coze-chat-container 这个 div 里 */
+            chatBot: {
+                el: document.getElementById('coze-chat-container'),
+                width: '100%',
+                height: '100%'
+            },
+            /* 隐藏自带的底部输入栏以外的多余部分 */
+            footer: { isShow: false },
+            asstBtn: { isNeed: false } /* 不需要悬浮球了 */
         }
+      });
+
+      // 进入聊天：显示 Chat View，隐藏 Landing View
+      function enterChat() {
+          const landing = document.getElementById('landing-view');
+          const chat = document.getElementById('chat-view');
+
+          landing.style.opacity = '0';
+          setTimeout(() => {
+              landing.style.display = 'none';
+              chat.style.display = 'block';
+              setTimeout(() => { chat.style.opacity = '1'; }, 50);
+          }, 500);
+      }
+
+      // 退出聊天：隐藏 Chat View，显示 Landing View
+      function exitChat() {
+          const landing = document.getElementById('landing-view');
+          const chat = document.getElementById('chat-view');
+
+          chat.style.opacity = '0';
+          setTimeout(() => {
+              chat.style.display = 'none';
+              landing.style.display = 'flex';
+              setTimeout(() => { landing.style.opacity = '1'; }, 50);
+          }, 300);
+      }
     </script>
 </body>
 </html>
